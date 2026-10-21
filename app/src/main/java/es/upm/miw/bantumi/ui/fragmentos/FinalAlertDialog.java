@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatDialog;
 import androidx.fragment.app.DialogFragment;
 
 import es.upm.miw.bantumi.R;
-import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
 import es.upm.miw.bantumi.ui.actividades.MainActivity;
 
 public class FinalAlertDialog extends DialogFragment {
@@ -31,12 +30,7 @@ public class FinalAlertDialog extends DialogFragment {
                 .setMessage(R.string.txtDialogoFinalPregunta)
                 .setPositiveButton(
                         getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                main.juegoBantumi.inicializar(JuegoBantumi.Turno.turnoJ1);
-                            }
-                        }
+                        (dialog, which) -> main.iniciarNuevaPartida()
                 )
                 .setNegativeButton(
                         getString(android.R.string.cancel),
