@@ -50,4 +50,8 @@
     <!-- Diálogo Reiniciar -->
     <string name="txtDialogoReiniciarPregunta">¿Desea reiniciar la partida?</string>
 
+    <!-- Guardar / Recuperar Partida -->
+    <string name="txtPartidaGuardada">Partida guardada correctamente</string>
+    <string name="txtErrorGuardarPartida">Error al guardar la partida</string>
+
 </resources>
