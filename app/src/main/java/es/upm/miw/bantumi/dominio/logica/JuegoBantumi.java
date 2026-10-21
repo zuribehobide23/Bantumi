@@ -233,4 +233,20 @@ public class JuegoBantumi {
             }
         }
     }
+
+    /**
+     * @return Indica si la partida actual ha sido modificada respecto a la inicial
+     */
+    public boolean partidaModificada() {
+        if (turnoActual() != Turno.turnoJ1) {
+            return true;
+        }
+        for (int i = 0; i < NUM_POSICIONES; i++) {
+            int esperado = (i == 6 || i == 13) ? 0 : numInicialSemillas;
+            if (getSemillas(i) != esperado) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

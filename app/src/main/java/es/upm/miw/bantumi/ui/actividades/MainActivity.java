@@ -19,11 +19,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
+import es.upm.miw.bantumi.ui.fragmentos.RecoverAlertDialog;
 import es.upm.miw.bantumi.ui.fragmentos.RestartAlertDialog;
 import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
@@ -141,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         } else if (itemId == R.id.opcReiniciarPartida) {
             new RestartAlertDialog().show(getSupportFragmentManager(), "RESTART_DIALOG");
+        } else if (itemId == R.id.opcRecuperarPartida) {
+            recuperarPartida();
         } else if (itemId == R.id.opcGuardarPartida) {
             try (FileOutputStream fos = openFileOutput("bantumi.dat", MODE_PRIVATE)) {
                 fos.write(juegoBantumi.serializa().getBytes(StandardCharsets.UTF_8));
@@ -168,6 +174,46 @@ public class MainActivity extends AppCompatActivity {
             ).show();
         }
         return true;
+    }
+
+    public void recuperarPartida() {
+        File file = new File(getFilesDir(), "bantumi.dat");
+        if (!file.exists()) {
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtNoPartidaGuardada),
+                    Snackbar.LENGTH_LONG
+            ).show();
+            return;
+        }
+        if (juegoBantumi.partidaModificada()) {
+            new RecoverAlertDialog(this::cargarPartidaDeFichero).show(getSupportFragmentManager(), "RECOVER_DIALOG");
+        } else {
+            cargarPartidaDeFichero();
+        }
+    }
+
+    private void cargarPartidaDeFichero() {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(openFileInput("bantumi.dat"), StandardCharsets.UTF_8))) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            juegoBantumi.deserializa(sb.toString());
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtPartidaRecuperada),
+                    Snackbar.LENGTH_LONG
+            ).show();
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Error al recuperar partida", e);
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtErrorRecuperarPartida),
+                    Snackbar.LENGTH_LONG
+            ).show();
+        }
     }
 
     /**
