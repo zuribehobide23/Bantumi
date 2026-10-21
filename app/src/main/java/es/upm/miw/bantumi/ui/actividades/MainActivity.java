@@ -1,6 +1,7 @@
 package es.upm.miw.bantumi.ui.actividades;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,13 +20,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.datos.BantumiDatabase;
@@ -40,6 +37,7 @@ import es.upm.miw.bantumi.ui.viewmodel.BantumiViewModel;
 public class MainActivity extends AppCompatActivity {
 
     protected final String LOG_TAG = "MiW";
+    public static final String TAG_MIW = "MiW";
     public JuegoBantumi juegoBantumi;
     private BantumiViewModel bantumiVM;
     int numInicialSemillas;
@@ -158,25 +156,10 @@ public class MainActivity extends AppCompatActivity {
             new RestartAlertDialog().show(getSupportFragmentManager(), "RESTART_DIALOG");
         } else if (itemId == R.id.opcRecuperarPartida) {
             recuperarPartida();
-        } else if (itemId == R.id.opcGuardarPartida) {
-            try (FileOutputStream fos = openFileOutput("bantumi.dat", MODE_PRIVATE)) {
-                fos.write(juegoBantumi.serializa().getBytes(StandardCharsets.UTF_8));
-                Snackbar.make(
-                        findViewById(android.R.id.content),
-                        getString(R.string.txtPartidaGuardada),
-                        Snackbar.LENGTH_LONG
-                ).show();
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error al guardar partida", e);
-                Snackbar.make(
-                        findViewById(android.R.id.content),
-                        getString(R.string.txtErrorGuardarPartida),
-                        Snackbar.LENGTH_LONG
-                ).show();
-            }
-        // } else if (itemId == R.id.opcAjustes) { // @TODO Preferencias
-            // startActivity(new Intent(this, BantumiPrefs.class));
-        // @TODO!!! resto opciones
+        } else if (itemId == R.id.opcMejoresResultados) {
+            mostrarMejoresResultados();
+        } else if (itemId == R.id.opcAjustes) {
+            startActivity(new Intent(this, SettingsActivity.class));
         } else {
             Snackbar.make(
                     findViewById(android.R.id.content),
@@ -187,44 +170,54 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void recuperarPartida() {
-        File file = new File(getFilesDir(), "bantumi.dat");
-        if (!file.exists()) {
+    public void mostrarMejoresResultados() {
+        List<Resultado> resultados = BantumiDatabase.getInstance(this).resultadoDao().obtenerMejoresResultados();
+        if (resultados == null || resultados.isEmpty()) {
             Snackbar.make(
                     findViewById(android.R.id.content),
-                    getString(R.string.txtNoPartidaGuardada),
+                    getString(R.string.txtNoResultados),
                     Snackbar.LENGTH_LONG
             ).show();
             return;
         }
-        if (juegoBantumi.partidaModificada()) {
-            new RecoverAlertDialog(this::cargarPartidaDeFichero).show(getSupportFragmentManager(), "RECOVER_DIALOG");
-        } else {
-            cargarPartidaDeFichero();
+
+        String[] items = new String[resultados.size()];
+        for (int i = 0; i < resultados.size(); i++) {
+            Resultado r = resultados.get(i);
+            items[i] = String.format(Locale.getDefault(), "%d. (%s) -> J1: %d | J2: %d",
+                    i + 1, r.getFechaHora(), r.getAlmacenJugador(), r.getAlmacenComputador());
         }
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.txtOpcionMejoresResultados)
+                .setItems(items, null)
+                .setPositiveButton(android.R.string.ok, null)
+                .setNeutralButton(R.string.txtBotonEliminar, (dialog, which) -> {
+                    new AlertDialog.Builder(this)
+                            .setTitle(R.string.txtOpcionMejoresResultados)
+                            .setMessage(R.string.txtDialogoEliminarResultados)
+                            .setPositiveButton(android.R.string.ok, (d, w) -> {
+                                BantumiDatabase.getInstance(this).resultadoDao().eliminarTodo();
+                                Snackbar.make(
+                                        findViewById(android.R.id.content),
+                                        getString(R.string.txtResultadosEliminados),
+                                        Snackbar.LENGTH_LONG
+                                ).show();
+                            })
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .show();
+                })
+                .show();
     }
 
-    private void cargarPartidaDeFichero() {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(openFileInput("bantumi.dat"), StandardCharsets.UTF_8))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            juegoBantumi.deserializa(sb.toString());
+    public void recuperarPartida() {
+        new RecoverAlertDialog(() -> {
             Snackbar.make(
                     findViewById(android.R.id.content),
-                    getString(R.string.txtPartidaRecuperada),
+                    getString(R.string.txtSinImplementar),
                     Snackbar.LENGTH_LONG
             ).show();
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error al recuperar partida", e);
-            Snackbar.make(
-                    findViewById(android.R.id.content),
-                    getString(R.string.txtErrorRecuperarPartida),
-                    Snackbar.LENGTH_LONG
-            ).show();
-        }
+        }).show(getSupportFragmentManager(), "RECOVER_DIALOG");
     }
 
     /**
@@ -248,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
             default:    // JUEGO TERMINADO
                 finJuego();
         }
+
         if (juegoBantumi.juegoTerminado()) {
             finJuego();
         }
@@ -281,6 +275,8 @@ public class MainActivity extends AppCompatActivity {
         if (juegoBantumi.getSemillas(6) == 6 * numInicialSemillas) {
             texto = "¡¡¡ EMPATE !!!";
         }
+
+        // @TODO guardar puntuación
 
         // terminar
         new FinalAlertDialog(texto).show(getSupportFragmentManager(), "ALERT_DIALOG");

@@ -17,6 +17,5 @@ androidx-lifecycle-livedata-core = { group = "androidx.lifecycle", name = "lifec
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
 preference = { group = "androidx.preference", name = "preference", version.ref = "preferenceVersion" }
-
 [plugins]
 android-application = { id = 'com.android.application', version.ref = 'agpVersion' }

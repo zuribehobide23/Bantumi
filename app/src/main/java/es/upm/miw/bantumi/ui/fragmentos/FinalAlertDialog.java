@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatDialog;
 import androidx.fragment.app.DialogFragment;
 
 import es.upm.miw.bantumi.R;
+import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
 import es.upm.miw.bantumi.ui.actividades.MainActivity;
 
 public class FinalAlertDialog extends DialogFragment {
