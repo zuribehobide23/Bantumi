@@ -42,20 +42,19 @@
     <string name="prefTextoNombreJugador">Pulse para teclear el nombre del jugador</string>
     <string name="prefTituloCategoria2">Ajustes del juego</string>
     <string name="prefTituloCategoria3">Más información…</string>
+    <string name="messages_header">Mensajes / Jugador</string>
+    <string name="signature_title">Nombre del jugador</string>
 
     <!-- Diálogo Final -->
     <string name="txtDialogoFinalTitulo">Fin del juego</string>
     <string name="txtDialogoFinalPregunta">¿Desea jugar otra partida?</string>
-
-    <!-- Diálogo Reiniciar -->
     <string name="txtDialogoReiniciarPregunta">¿Desea reiniciar la partida?</string>
+    <string name="txtDialogoRecuperarPregunta">¿Desea recuperar la partida guardada?</string>
 
-    <!-- Guardar / Recuperar Partida -->
-    <string name="txtPartidaGuardada">Partida guardada correctamente</string>
-    <string name="txtErrorGuardarPartida">Error al guardar la partida</string>
-    <string name="txtPartidaRecuperada">Partida recuperada correctamente</string>
-    <string name="txtErrorRecuperarPartida">Error al recuperar la partida</string>
-    <string name="txtNoPartidaGuardada">No existe ninguna partida guardada</string>
-    <string name="txtDialogoRecuperarPregunta">La partida actual ha sido modificada. ¿Desea recuperar la partida guardada?</string>
+    <!-- Mejores Resultados -->
+    <string name="txtNoResultados">No hay resultados guardados</string>
+    <string name="txtBotonEliminar">Eliminar</string>
+    <string name="txtDialogoEliminarResultados">¿Desea eliminar todos los resultados?</string>
+    <string name="txtResultadosEliminados">Resultados eliminados correctamente</string>
 
 </resources>
