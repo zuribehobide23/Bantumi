@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatDialog;
 import androidx.fragment.app.DialogFragment;
 
 import es.upm.miw.bantumi.R;
-import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
 import es.upm.miw.bantumi.ui.actividades.MainActivity;
 
 public class RestartAlertDialog extends DialogFragment {
@@ -24,7 +23,7 @@ public class RestartAlertDialog extends DialogFragment {
                 .setMessage(R.string.txtDialogoReiniciarPregunta)
                 .setPositiveButton(
                         getString(android.R.string.ok),
-                        (dialog, which) -> main.juegoBantumi.inicializar(JuegoBantumi.Turno.turnoJ1)
+                        (dialog, which) -> main.iniciarNuevaPartida()
                 )
                 .setNegativeButton(
                         getString(android.R.string.cancel),
