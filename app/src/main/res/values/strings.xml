@@ -53,5 +53,9 @@
     <!-- Guardar / Recuperar Partida -->
     <string name="txtPartidaGuardada">Partida guardada correctamente</string>
     <string name="txtErrorGuardarPartida">Error al guardar la partida</string>
+    <string name="txtPartidaRecuperada">Partida recuperada correctamente</string>
+    <string name="txtErrorRecuperarPartida">Error al recuperar la partida</string>
+    <string name="txtNoPartidaGuardada">No existe ninguna partida guardada</string>
+    <string name="txtDialogoRecuperarPregunta">La partida actual ha sido modificada. ¿Desea recuperar la partida guardada?</string>
 
 </resources>
