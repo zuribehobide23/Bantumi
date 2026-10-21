@@ -19,6 +19,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
@@ -139,6 +141,22 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         } else if (itemId == R.id.opcReiniciarPartida) {
             new RestartAlertDialog().show(getSupportFragmentManager(), "RESTART_DIALOG");
+        } else if (itemId == R.id.opcGuardarPartida) {
+            try (FileOutputStream fos = openFileOutput("bantumi.dat", MODE_PRIVATE)) {
+                fos.write(juegoBantumi.serializa().getBytes(StandardCharsets.UTF_8));
+                Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.txtPartidaGuardada),
+                        Snackbar.LENGTH_LONG
+                ).show();
+            } catch (Exception e) {
+                Log.e(LOG_TAG, "Error al guardar partida", e);
+                Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.txtErrorGuardarPartida),
+                        Snackbar.LENGTH_LONG
+                ).show();
+            }
         // } else if (itemId == R.id.opcAjustes) { // @TODO Preferencias
             // startActivity(new Intent(this, BantumiPrefs.class));
         // @TODO!!! resto opciones
