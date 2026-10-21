@@ -204,12 +204,8 @@ public class JuegoBantumi {
      * @return juego serializado
      */
     public String serializa() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < NUM_POSICIONES; i++) {
-            sb.append(getSemillas(i)).append(" ");
-        }
-        sb.append(turnoActual());
-        return sb.toString().trim();
+        // @TODO
+        return null;
     }
 
     /**
@@ -218,35 +214,6 @@ public class JuegoBantumi {
      * @param juegoSerializado cadena que representa el estado completo del juego
      */
     public void deserializa(String juegoSerializado) {
-        if (juegoSerializado == null || juegoSerializado.trim().isEmpty()) {
-            return;
-        }
-        String[] tokens = juegoSerializado.trim().split("\\s+");
-        for (int i = 0; i < NUM_POSICIONES && i < tokens.length; i++) {
-            setSemillas(i, Integer.parseInt(tokens[i]));
-        }
-        if (tokens.length > NUM_POSICIONES) {
-            try {
-                setTurno(Turno.valueOf(tokens[NUM_POSICIONES]));
-            } catch (IllegalArgumentException e) {
-                Log.e("MiW", "Error al deserializar turno", e);
-            }
-        }
-    }
-
-    /**
-     * @return Indica si la partida actual ha sido modificada respecto a la inicial
-     */
-    public boolean partidaModificada() {
-        if (turnoActual() != Turno.turnoJ1) {
-            return true;
-        }
-        for (int i = 0; i < NUM_POSICIONES; i++) {
-            int esperado = (i == 6 || i == 13) ? 0 : numInicialSemillas;
-            if (getSemillas(i) != esperado) {
-                return true;
-            }
-        }
-        return false;
+        // @TODO
     }
 }
