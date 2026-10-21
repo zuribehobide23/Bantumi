@@ -24,8 +24,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
+import es.upm.miw.bantumi.datos.BantumiDatabase;
+import es.upm.miw.bantumi.datos.Resultado;
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
 import es.upm.miw.bantumi.ui.fragmentos.RecoverAlertDialog;
 import es.upm.miw.bantumi.ui.fragmentos.RestartAlertDialog;
@@ -39,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
     public JuegoBantumi juegoBantumi;
     private BantumiViewModel bantumiVM;
     int numInicialSemillas;
+    private boolean puntuacionGuardada = false;
+
+    public void iniciarNuevaPartida() {
+        juegoBantumi.inicializar(JuegoBantumi.Turno.turnoJ1);
+        puntuacionGuardada = false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
         juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
+        puntuacionGuardada = false;
         crearObservadores();
     }
 
@@ -246,14 +257,30 @@ public class MainActivity extends AppCompatActivity {
      * El juego ha terminado. Volver a jugar?
      */
     private void finJuego() {
+        if (!puntuacionGuardada) {
+            puntuacionGuardada = true;
+            String nombreJugador = androidx.preference.PreferenceManager
+                    .getDefaultSharedPreferences(this)
+                    .getString("prefKeyNombreJugador", getString(R.string.txtPlayer1));
+            String fechaHora = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault()).format(new Date());
+            int semillasJ1 = juegoBantumi.getSemillas(6);
+            int semillasJ2 = juegoBantumi.getSemillas(13);
+
+            Resultado resultado = new Resultado(
+                    nombreJugador, fechaHora, semillasJ1, semillasJ2
+            );
+            BantumiDatabase.getInstance(this)
+                    .resultadoDao()
+                    .insertar(resultado);
+            Log.i(LOG_TAG, "Puntuación guardada en Room: " + nombreJugador + " - J1:" + semillasJ1 + " J2:" + semillasJ2);
+        }
+
         String texto = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)
                 ? "Gana Jugador 1"
                 : "Gana Jugador 2";
         if (juegoBantumi.getSemillas(6) == 6 * numInicialSemillas) {
             texto = "¡¡¡ EMPATE !!!";
         }
-
-        // @TODO guardar puntuación
 
         // terminar
         new FinalAlertDialog(texto).show(getSupportFragmentManager(), "ALERT_DIALOG");
