@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
+import es.upm.miw.bantumi.ui.fragmentos.RestartAlertDialog;
 import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
 import es.upm.miw.bantumi.ui.viewmodel.BantumiViewModel;
@@ -136,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
                     .setMessage(R.string.aboutMessage)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
+        } else if (itemId == R.id.opcReiniciarPartida) {
+            new RestartAlertDialog().show(getSupportFragmentManager(), "RESTART_DIALOG");
         // } else if (itemId == R.id.opcAjustes) { // @TODO Preferencias
             // startActivity(new Intent(this, BantumiPrefs.class));
         // @TODO!!! resto opciones
