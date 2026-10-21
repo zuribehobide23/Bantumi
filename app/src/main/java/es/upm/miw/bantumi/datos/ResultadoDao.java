@@ -12,6 +12,9 @@ public interface ResultadoDao {
     @Query("SELECT * FROM resultados ORDER BY id DESC")
     LiveData<List<Resultado>> obtenerResultados();
 
+    @Query("SELECT * FROM resultados ORDER BY MAX(almacenJugador, almacenComputador) DESC LIMIT 10")
+    List<Resultado> obtenerMejoresResultados();
+
     @Insert
     void insertar(Resultado resultado);
 
