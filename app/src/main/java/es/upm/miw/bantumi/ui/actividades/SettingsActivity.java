@@ -49,6 +49,19 @@ public class SettingsActivity extends AppCompatActivity {
                 });
             }
 
+            EditTextPreference prefSemillas = findPreference("prefKeyNumInicialSemillas");
+            if (prefSemillas != null) {
+                prefSemillas.setDialogMessage(R.string.prefMensajeNumSemillas);
+                prefSemillas.setOnBindEditTextListener(editText -> {
+                    editText.setSingleLine(true);
+                    editText.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+                    editText.setHint("Ej. 4");
+                    editText.setFilters(new android.text.InputFilter[]{
+                            new android.text.InputFilter.LengthFilter(2)
+                    });
+                });
+            }
+
             // Monitorización de preferencia SYNC
             Preference preferenceSync = findPreference("sync");
             if (preferenceSync != null) {

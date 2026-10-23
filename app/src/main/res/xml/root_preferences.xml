@@ -14,14 +14,12 @@
 
     <PreferenceCategory app:title="@string/prefTituloCategoria2">
 
-        <ListPreference
+        <EditTextPreference
             app:key="prefKeyNumInicialSemillas"
             app:title="@string/prefTituloNumInicialSemillas"
             app:summary="%s"
             app:useSimpleSummaryProvider="true"
-            app:defaultValue="4"
-            app:entries="@array/num_semillas_entries"
-            app:entryValues="@array/num_semillas_values" />
+            app:defaultValue="4" />
 
         <ListPreference
             app:key="prefKeyTurnoInicial"
