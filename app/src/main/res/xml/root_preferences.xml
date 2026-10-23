@@ -18,9 +18,19 @@
             app:key="prefKeyNumInicialSemillas"
             app:title="@string/prefTituloNumInicialSemillas"
             app:summary="%s"
+            app:useSimpleSummaryProvider="true"
             app:defaultValue="4"
             app:entries="@array/num_semillas_entries"
             app:entryValues="@array/num_semillas_values" />
+
+        <ListPreference
+            app:key="prefKeyTurnoInicial"
+            app:title="@string/prefTituloTurnoInicial"
+            app:summary="%s"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="turnoJ1"
+            app:entries="@array/turno_entries"
+            app:entryValues="@array/turno_values" />
 
     </PreferenceCategory>
 

@@ -42,18 +42,48 @@ public class MainActivity extends AppCompatActivity {
     private BantumiViewModel bantumiVM;
     int numInicialSemillas;
     private boolean puntuacionGuardada = false;
+    private String lastNumSemillas = "";
+    private String lastTurnoInicial = "";
+    private String lastNombreJugador = "";
 
     public void iniciarNuevaPartida() {
         android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
         String numSemillasStr = preferences.getString("prefKeyNumInicialSemillas", String.valueOf(getResources().getInteger(R.integer.intNumInicialSemillas)));
+        Log.i(LOG_TAG, "iniciarNuevaPartida() -> prefKeyNumInicialSemillas: " + numSemillasStr);
         try {
             numInicialSemillas = Integer.parseInt(numSemillasStr);
         } catch (Exception e) {
+            Log.e(LOG_TAG, "Error parsing numInicialSemillas", e);
             numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
         }
+
+        String turnoStr = preferences.getString("prefKeyTurnoInicial", "turnoJ1");
+        Log.i(LOG_TAG, "iniciarNuevaPartida() -> prefKeyTurnoInicial: " + turnoStr);
+        JuegoBantumi.Turno turnoInicial;
+        if ("turnoAleatorio".equals(turnoStr)) {
+            turnoInicial = (Math.random() < 0.5) ? JuegoBantumi.Turno.turnoJ1 : JuegoBantumi.Turno.turnoJ2;
+        } else {
+            try {
+                turnoInicial = JuegoBantumi.Turno.valueOf(turnoStr);
+            } catch (Exception e) {
+                Log.e(LOG_TAG, "Error parsing turnoInicial", e);
+                turnoInicial = JuegoBantumi.Turno.turnoJ1;
+            }
+        }
+
+        String nombreJugador = preferences.getString("prefKeyNombreJugador", getString(R.string.txtPlayer1));
+        TextView tvPlayer1 = findViewById(R.id.tvPlayer1);
+        if (tvPlayer1 != null) {
+            tvPlayer1.setText(nombreJugador);
+        }
+
+        lastNumSemillas = numSemillasStr;
+        lastTurnoInicial = turnoStr;
+        lastNombreJugador = nombreJugador;
+
         if (bantumiVM != null) {
-            juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
-            juegoBantumi.inicializar(JuegoBantumi.Turno.turnoJ1);
+            juegoBantumi = new JuegoBantumi(bantumiVM, turnoInicial, numInicialSemillas);
+            juegoBantumi.inicializar(turnoInicial);
         }
         puntuacionGuardada = false;
     }
@@ -81,14 +111,15 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
         String numSemillasStr = preferences.getString("prefKeyNumInicialSemillas", String.valueOf(getResources().getInteger(R.integer.intNumInicialSemillas)));
-        int nuevasSemillas;
-        try {
-            nuevasSemillas = Integer.parseInt(numSemillasStr);
-        } catch (Exception e) {
-            nuevasSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
+        String turnoStr = preferences.getString("prefKeyTurnoInicial", "turnoJ1");
+        String nombreJugador = preferences.getString("prefKeyNombreJugador", getString(R.string.txtPlayer1));
+
+        TextView tvPlayer1 = findViewById(R.id.tvPlayer1);
+        if (tvPlayer1 != null) {
+            tvPlayer1.setText(nombreJugador);
         }
-        if (nuevasSemillas != numInicialSemillas) {
-            numInicialSemillas = nuevasSemillas;
+
+        if (!numSemillasStr.equals(lastNumSemillas) || !turnoStr.equals(lastTurnoInicial) || !nombreJugador.equals(lastNombreJugador)) {
             iniciarNuevaPartida();
         }
     }

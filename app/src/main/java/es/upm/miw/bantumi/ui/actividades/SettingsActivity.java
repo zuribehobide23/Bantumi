@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -37,6 +38,16 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+            EditTextPreference prefNombre = findPreference("prefKeyNombreJugador");
+            if (prefNombre != null) {
+                prefNombre.setOnBindEditTextListener(editText -> {
+                    editText.setSingleLine(true);
+                    editText.setFilters(new android.text.InputFilter[]{
+                            new android.text.InputFilter.LengthFilter(15)
+                    });
+                });
+            }
 
             // Monitorización de preferencia SYNC
             Preference preferenceSync = findPreference("sync");

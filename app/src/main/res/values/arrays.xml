@@ -22,4 +22,14 @@
         <item>5</item>
         <item>6</item>
     </string-array>
+    <string-array name="turno_entries">
+        <item>Jugador 1</item>
+        <item>Jugador 2 (Computador)</item>
+        <item>Aleatorio</item>
+    </string-array>
+    <string-array name="turno_values">
+        <item>turnoJ1</item>
+        <item>turnoJ2</item>
+        <item>turnoAleatorio</item>
+    </string-array>
 </resources>
