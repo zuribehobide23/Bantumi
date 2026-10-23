@@ -44,6 +44,7 @@
     <string name="prefTituloCategoria3">Más información…</string>
     <string name="messages_header">Mensajes / Jugador</string>
     <string name="signature_title">Nombre del jugador</string>
+    <string name="prefTituloNumInicialSemillas">Número inicial de semillas</string>
 
     <!-- Diálogo Final -->
     <string name="txtDialogoFinalTitulo">Fin del juego</string>

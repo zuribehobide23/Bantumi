@@ -44,7 +44,17 @@ public class MainActivity extends AppCompatActivity {
     private boolean puntuacionGuardada = false;
 
     public void iniciarNuevaPartida() {
-        juegoBantumi.inicializar(JuegoBantumi.Turno.turnoJ1);
+        android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        String numSemillasStr = preferences.getString("prefKeyNumInicialSemillas", String.valueOf(getResources().getInteger(R.integer.intNumInicialSemillas)));
+        try {
+            numInicialSemillas = Integer.parseInt(numSemillasStr);
+        } catch (Exception e) {
+            numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
+        }
+        if (bantumiVM != null) {
+            juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
+            juegoBantumi.inicializar(JuegoBantumi.Turno.turnoJ1);
+        }
         puntuacionGuardada = false;
     }
 
@@ -61,11 +71,26 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Instancia el ViewModel y el juego, y asigna observadores a los huecos
-        numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
-        juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
-        puntuacionGuardada = false;
+        iniciarNuevaPartida();
         crearObservadores();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        String numSemillasStr = preferences.getString("prefKeyNumInicialSemillas", String.valueOf(getResources().getInteger(R.integer.intNumInicialSemillas)));
+        int nuevasSemillas;
+        try {
+            nuevasSemillas = Integer.parseInt(numSemillasStr);
+        } catch (Exception e) {
+            nuevasSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
+        }
+        if (nuevasSemillas != numInicialSemillas) {
+            numInicialSemillas = nuevasSemillas;
+            iniciarNuevaPartida();
+        }
     }
 
     /**
