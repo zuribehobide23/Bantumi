@@ -86,6 +86,11 @@ public class SettingsActivity extends AppCompatActivity {
                     if (getActivity() != null) {
                         getActivity().recreate();
                     }
+                } else if ("prefKeyIdioma".equals(key)) {
+                    String lang = sharedPreferences.getString(key, "es");
+                    androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(
+                            androidx.core.os.LocaleListCompat.forLanguageTags(lang)
+                    );
                 }
             };
         }

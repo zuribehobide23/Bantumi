@@ -43,6 +43,15 @@
             app:entries="@array/color_entries"
             app:entryValues="@array/color_values" />
 
+        <ListPreference
+            app:key="prefKeyIdioma"
+            app:title="@string/prefTituloIdioma"
+            app:summary="%s"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="es"
+            app:entries="@array/idioma_entries"
+            app:entryValues="@array/idioma_values" />
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/prefTituloPersonalizacionColores">

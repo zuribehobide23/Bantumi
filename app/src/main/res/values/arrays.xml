@@ -62,4 +62,14 @@
         <item>azul</item>
         <item>amarillo</item>
     </string-array>
+    <string-array name="idioma_entries">
+        <item>Español</item>
+        <item>English</item>
+        <item>Euskera</item>
+    </string-array>
+    <string-array name="idioma_values">
+        <item>es</item>
+        <item>en</item>
+        <item>eu</item>
+    </string-array>
 </resources>

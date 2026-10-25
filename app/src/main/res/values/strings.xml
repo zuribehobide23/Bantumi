@@ -31,19 +31,7 @@
     <!-- Acerca de -->
     <string name="aboutText">Acerca de</string>
     <string name="aboutTitle">¿Cómo se juega?</string>
-    <string name="aboutMessage"><p>Cada jugador elige una de sus 6 casillas -que no puede estar vacía-, recoge
-        todas las semillas que contenga y las “siembra” una a una en sentido contrario a las agujas del reloj
-        en las siguientes casillas del tablero (excepto en el almacén del oponente). Se aplican las siguientes reglas:</p>
-        <ul>
-            <li>Si la siembra termina en el almacén propio, el jugador vuelve a tener el turno</li>
-            <li>Si la siembra termina en una casilla propia que estuviera vacía, se lleva al almacén
-                propio la última semilla y las que hubiera en la casilla opuesta del otro jugador</li>
-            <li>El juego termina en el momento en que cualquiera de los dos jugadores tenga todas sus
-                casillas vacías. Si el contrario dispone de semillas, éstas pasarán al almacén del propietario
-                de las casillas</li>
-        </ul>
-        <p>Gana el jugador que consiga en su almacén el mayor número de semillas</p>
-    </string>
+    <string name="aboutMessage">"<p>Cada jugador elige una de sus 6 casillas -que no puede estar vacía-, recoge         todas las semillas que contenga y las “siembra” una a una en sentido contrario a las agujas del reloj         en las siguientes casillas del tablero (excepto en el almacén del oponente). Se aplican las siguientes reglas:</p>         <ul>             <li>Si la siembra termina en el almacén propio, el jugador vuelve a tener el turno</li>             <li>Si la siembra termina en una casilla propia que estuviera vacía, se lleva al almacén                 propio la última semilla y las que hubiera en la casilla opuesta del otro jugador</li>             <li>El juego termina en el momento en que cualquiera de los dos jugadores tenga todas sus                 casillas vacías. Si el contrario dispone de semillas, éstas pasarán al almacén del propietario                 de las casillas</li>         </ul>         <p>Gana el jugador que consiga en su almacén el mayor número de semillas</p>     "</string>
 
     <!-- Preferencias -->
     <string name="preferencesText">Ajustes</string>
@@ -59,6 +47,7 @@
     <string name="prefTituloTurnoInicial">Turno inicial</string>
     <string name="prefTituloApariencia">Apariencia</string>
     <string name="prefTituloColorTema">Color de tema</string>
+    <string name="prefTituloIdioma">Idioma</string>
     <string name="prefTituloPersonalizacionColores">Personalización detallada de colores</string>
     <string name="prefColorFondoJuego">Color de fondo del juego</string>
     <string name="prefColorCasillas">Color de las casillas</string>
