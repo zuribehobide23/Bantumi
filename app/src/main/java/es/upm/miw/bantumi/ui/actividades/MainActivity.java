@@ -31,6 +31,7 @@ import java.util.Locale;
 import es.upm.miw.bantumi.datos.BantumiDatabase;
 import es.upm.miw.bantumi.datos.PartidaGuardada;
 import es.upm.miw.bantumi.datos.Resultado;
+import es.upm.miw.bantumi.datos.ResultadoDao;
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
 import es.upm.miw.bantumi.ui.fragmentos.RecoverAlertDialog;
 import es.upm.miw.bantumi.ui.fragmentos.RestartAlertDialog;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private String lastNumSemillas = "";
     private String lastTurnoInicial = "";
     private String lastNombreJugador = "";
+    private boolean esOrdenAscendente = false;
+    private String jugadorFiltro = null;
 
     private void iniciarCronometro() {
         if (!partidaIniciada) {
@@ -252,18 +255,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void mostrarMejoresResultados() {
-        List<Resultado> resultados = BantumiDatabase.getInstance(this).resultadoDao().obtenerMejoresResultados();
+        mostrarMejoresResultadosConFiltro();
+    }
+
+    private void mostrarMejoresResultadosConFiltro() {
+        ResultadoDao dao = BantumiDatabase.getInstance(this).resultadoDao();
+        List<Resultado> resultados;
+        String titulo;
+        String nombreJ2 = getString(R.string.txtPlayer2);
+
+        if (jugadorFiltro != null) {
+            titulo = "Ganadas por " + jugadorFiltro;
+            if (jugadorFiltro.equalsIgnoreCase(nombreJ2)) {
+                if (esOrdenAscendente) {
+                    resultados = dao.obtenerPartidasGanadasPorComputadorAsc();
+                } else {
+                    resultados = dao.obtenerPartidasGanadasPorComputadorDesc();
+                }
+            } else {
+                if (esOrdenAscendente) {
+                    resultados = dao.obtenerPartidasGanadasPorJugadorAsc(jugadorFiltro);
+                } else {
+                    resultados = dao.obtenerPartidasGanadasPorJugadorDesc(jugadorFiltro);
+                }
+            }
+        } else {
+            titulo = "Por semillas";
+            if (esOrdenAscendente) {
+                resultados = dao.obtenerMejoresResultadosAsc();
+            } else {
+                resultados = dao.obtenerMejoresResultadosDesc();
+            }
+        }
+
+        String flechaOrden = esOrdenAscendente ? " ⬆" : " ⬇";
+
         if (resultados == null || resultados.isEmpty()) {
             Snackbar.make(
                     findViewById(android.R.id.content),
-                    getString(R.string.txtNoResultados),
+                    getString(R.string.txtNoResultados) + " (" + titulo + ")",
                     Snackbar.LENGTH_LONG
             ).show();
+            if (jugadorFiltro != null) {
+                jugadorFiltro = null;
+            }
             return;
         }
 
         CharSequence[] items = new CharSequence[resultados.size()];
-        String nombreJ2 = getString(R.string.txtPlayer2);
 
         for (int i = 0; i < resultados.size(); i++) {
             Resultado r = resultados.get(i);
@@ -293,25 +332,71 @@ public class MainActivity extends AppCompatActivity {
             items[i] = android.text.Html.fromHtml(htmlText, android.text.Html.FROM_HTML_MODE_LEGACY);
         }
 
+        String textoBotonOrden = esOrdenAscendente ? "Orden: ASC" : "Orden: DESC";
+
         new AlertDialog.Builder(this)
-                .setTitle(R.string.txtOpcionMejoresResultados)
+                .setTitle(getString(R.string.txtOpcionMejoresResultados) + " - " + titulo + flechaOrden)
                 .setItems(items, null)
-                .setPositiveButton(android.R.string.ok, null)
-                .setNeutralButton(R.string.txtBotonEliminar, (dialog, which) -> {
-                    new AlertDialog.Builder(this)
-                            .setTitle(R.string.txtOpcionMejoresResultados)
-                            .setMessage(R.string.txtDialogoEliminarResultados)
-                            .setPositiveButton(android.R.string.ok, (d, w) -> {
-                                BantumiDatabase.getInstance(this).resultadoDao().eliminarTodo();
-                                Snackbar.make(
-                                        findViewById(android.R.id.content),
-                                        getString(R.string.txtResultadosEliminados),
-                                        Snackbar.LENGTH_LONG
-                                ).show();
-                            })
-                            .setNegativeButton(android.R.string.cancel, null)
-                            .show();
+                .setPositiveButton(textoBotonOrden, (dialog, which) -> {
+                    esOrdenAscendente = !esOrdenAscendente;
+                    mostrarMejoresResultadosConFiltro();
                 })
+                .setNeutralButton("Filtrar", (dialog, which) -> abrirDialogoFiltro())
+                .setNegativeButton(android.R.string.ok, null)
+                .show();
+    }
+
+    private void abrirDialogoFiltro() {
+        CharSequence[] opciones = new CharSequence[]{
+                "Por semillas",
+                "Por partidas ganadas de un jugador"
+        };
+
+        new AlertDialog.Builder(this)
+                .setTitle("Opciones de filtrado")
+                .setItems(opciones, (dialog, which) -> {
+                    if (which == 0) {
+                        jugadorFiltro = null;
+                        mostrarMejoresResultadosConFiltro();
+                    } else if (which == 1) {
+                        filtrarPorJugador();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void filtrarPorJugador() {
+        ResultadoDao dao = BantumiDatabase.getInstance(this).resultadoDao();
+        List<String> jugadoresList = dao.obtenerJugadoresDisponibles();
+        if (jugadoresList == null) {
+            jugadoresList = new java.util.ArrayList<>();
+        } else {
+            jugadoresList = new java.util.ArrayList<>(jugadoresList);
+        }
+        String nombreJ2 = getString(R.string.txtPlayer2);
+        if (!jugadoresList.contains(nombreJ2)) {
+            jugadoresList.add(nombreJ2);
+        }
+
+        final List<String> finalJugadoresList = jugadoresList;
+        if (finalJugadoresList.isEmpty()) {
+            Snackbar.make(findViewById(android.R.id.content), R.string.txtNoResultados, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        CharSequence[] items = new CharSequence[finalJugadoresList.size()];
+        for (int i = 0; i < finalJugadoresList.size(); i++) {
+            items[i] = finalJugadoresList.get(i);
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Selecciona jugador (partidas ganadas)")
+                .setItems(items, (dialog, which) -> {
+                    jugadorFiltro = finalJugadoresList.get(which);
+                    mostrarMejoresResultadosConFiltro();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
                 .show();
     }
 
@@ -490,7 +575,7 @@ public class MainActivity extends AppCompatActivity {
             int semillasJ2 = juegoBantumi.getSemillas(13);
 
             Resultado resultado = new Resultado(
-                    nombreJugador, fechaHora, semillasJ1, semillasJ2, duracionSegundos
+                    nombreJugador, fechaHora, semillasJ1, semillasJ2, duracionSegundos, numInicialSemillas
             );
             BantumiDatabase.getInstance(this)
                     .resultadoDao()
