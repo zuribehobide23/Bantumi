@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PartidaGuardada {
-    private String id;
-    private String nombre;
-    private String fechaHora;
-    private String datosSerializados;
+    private final String id;
+    private final String nombre;
+    private final String fechaHora;
+    private final String datosSerializados;
 
     public PartidaGuardada(String id, String nombre, String fechaHora, String datosSerializados) {
         this.id = id;

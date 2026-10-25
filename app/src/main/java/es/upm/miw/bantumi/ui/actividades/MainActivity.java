@@ -33,7 +33,6 @@ import es.upm.miw.bantumi.datos.PartidaGuardada;
 import es.upm.miw.bantumi.datos.Resultado;
 import es.upm.miw.bantumi.datos.ResultadoDao;
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
-import es.upm.miw.bantumi.ui.fragmentos.RecoverAlertDialog;
 import es.upm.miw.bantumi.ui.fragmentos.RestartAlertDialog;
 import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
@@ -42,7 +41,6 @@ import es.upm.miw.bantumi.ui.viewmodel.BantumiViewModel;
 public class MainActivity extends AppCompatActivity {
 
     protected final String LOG_TAG = "MiW";
-    public static final String TAG_MIW = "MiW";
     public JuegoBantumi juegoBantumi;
     private BantumiViewModel bantumiVM;
     private Chronometer cronometro;
@@ -331,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
             case "verde": return getColor(android.R.color.holo_green_dark);
             case "azul": return getColor(android.R.color.holo_blue_dark);
             case "naranja": return getColor(android.R.color.holo_orange_dark);
-            case "amarillo": return getColor(android.R.color.holo_orange_dark);
+            case "amarillo": return getColor(android.R.color.holo_orange_light);
             case "morado": return getColor(android.R.color.holo_purple);
             case "gris": return getColor(android.R.color.darker_gray);
             default: return defColor;
@@ -824,8 +822,6 @@ public class MainActivity extends AppCompatActivity {
         if (juegoBantumi.getSemillas(6) == 6 * numInicialSemillas) {
             texto = "¡¡¡ " + getString(R.string.txtEmpate) + " !!!";
         }
-
-        // @TODO guardar puntuación
 
         // terminar
         new FinalAlertDialog(texto).show(getSupportFragmentManager(), "ALERT_DIALOG");
