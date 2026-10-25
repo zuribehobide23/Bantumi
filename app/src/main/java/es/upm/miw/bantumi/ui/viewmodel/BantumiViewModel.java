@@ -13,9 +13,9 @@ public class BantumiViewModel extends ViewModel {
 
     private String idPartidaRecuperada = null;
 
-    private ArrayList<MutableLiveData<Integer>> tablero;
+    private final ArrayList<MutableLiveData<Integer>> tablero;
 
-    private MutableLiveData<JuegoBantumi.Turno> turno;
+    private final MutableLiveData<JuegoBantumi.Turno> turno;
 
     public BantumiViewModel() {
         turno = new MutableLiveData<>(JuegoBantumi.Turno.turnoJ1);
