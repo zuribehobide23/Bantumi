@@ -53,6 +53,10 @@
     <string name="txtDialogoEliminarResultados">Emaitza guztiak ezabatu nahi dituzu?</string>
     <string name="txtResultadosEliminados">Emaitzak behar bezala ezabatuta</string>
     <string name="txtGuardadaCorrectamente">behar bezala gordeta</string>
+    <string name="txtOpcionEliminarHistorial">Emaitza guztiak ezabatu</string>
+    <string name="txtTituloEliminarHistorial">Historia ezabatu</string>
+    <string name="txtMensajeEliminarHistorial">Ziur zaude gordetako puntuazio guztiak ezabatu nahi dituzula? Ekintza hau ezin da desegin.</string>
+    <string name="txtHistorialEliminado">Historia ezabatu da</string>
 
     <string name="color_azul">Urdina</string>
     <string name="color_verde">Berdea</string>

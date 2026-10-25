@@ -53,6 +53,10 @@
     <string name="txtDialogoEliminarResultados">Do you want to delete all the results?</string>
     <string name="txtResultadosEliminados">Results successfully deleted</string>
     <string name="txtGuardadaCorrectamente">successfully saved</string>
+    <string name="txtOpcionEliminarHistorial">Delete all results</string>
+    <string name="txtTituloEliminarHistorial">Delete history</string>
+    <string name="txtMensajeEliminarHistorial">Are you sure you want to delete all saved scores? This action cannot be undone.</string>
+    <string name="txtHistorialEliminado">History deleted</string>
 
     <string name="color_azul">Blue</string>
     <string name="color_verde">Green</string>

@@ -512,16 +512,41 @@ public class MainActivity extends AppCompatActivity {
 
         String textoBotonOrden = esOrdenAscendente ? getString(R.string.orden_asc_texto) : getString(R.string.orden_desc_texto);
 
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.txtOpcionMejoresResultados) + " - " + titulo + flechaOrden)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        android.widget.LinearLayout titleLayout = new android.widget.LinearLayout(this);
+        titleLayout.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        titleLayout.setPadding(60, 50, 60, 40); // Márgenes
+
+        android.widget.TextView tvTitulo = new android.widget.TextView(this);
+        tvTitulo.setText(getString(R.string.txtOpcionMejoresResultados) + " - " + titulo + flechaOrden);
+        tvTitulo.setTextSize(20);
+        tvTitulo.setTypeface(null, android.graphics.Typeface.BOLD);
+        tvTitulo.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
+                0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
+
+        android.widget.TextView tvCerrar = new android.widget.TextView(this);
+        tvCerrar.setText("✕");
+        tvCerrar.setTextColor(getColor(android.R.color.black));
+        tvCerrar.setTextSize(22);
+        tvCerrar.setTypeface(null, android.graphics.Typeface.BOLD);
+        tvCerrar.setPadding(30, 0, 10, 0);
+
+        titleLayout.addView(tvTitulo);
+        titleLayout.addView(tvCerrar);
+
+        builder.setCustomTitle(titleLayout)
                 .setItems(items, null)
                 .setPositiveButton(textoBotonOrden, (dialog, which) -> {
                     esOrdenAscendente = !esOrdenAscendente;
                     mostrarMejoresResultadosConFiltro();
                 })
                 .setNeutralButton(R.string.boton_filtrar, (dialog, which) -> abrirDialogoFiltro())
-                .setNegativeButton(android.R.string.ok, null)
-                .show();
+                .setNegativeButton(R.string.txtOpcionEliminarHistorial, (dialog, which) -> mostrarDialogoBorrarHistorial());
+
+        AlertDialog dialog = builder.create();
+        tvCerrar.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
     private void abrirDialogoFiltro() {
@@ -539,6 +564,27 @@ public class MainActivity extends AppCompatActivity {
                     } else if (which == 1) {
                         filtrarPorJugador();
                     }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void mostrarDialogoBorrarHistorial() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.txtTituloEliminarHistorial)
+                .setMessage(R.string.txtMensajeEliminarHistorial)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    ResultadoDao dao = BantumiDatabase.getInstance(this).resultadoDao();
+                    new Thread(() -> {
+                        dao.eliminarTodo();
+                        runOnUiThread(() -> {
+                            com.google.android.material.snackbar.Snackbar.make(
+                                    findViewById(android.R.id.content),
+                                    getString(R.string.txtHistorialEliminado),
+                                    com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+                            ).show();
+                        });
+                    }).start();
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();

@@ -28,6 +28,10 @@
     <string name="txtDialogoEliminarPartidas">¿Desea eliminar todas las partidas guardadas?</string>
     <string name="txtPartidasEliminadas">Partidas guardadas eliminadas</string>
     <string name="txtGuardadaCorrectamente">guardada correctamente</string>
+    <string name="txtOpcionEliminarHistorial">Eliminar todos los resultados</string>
+    <string name="txtTituloEliminarHistorial">Eliminar historial</string>
+    <string name="txtMensajeEliminarHistorial">¿Estás seguro de que deseas borrar todas las puntuaciones guardadas? Esta acción no se puede deshacer.</string>
+    <string name="txtHistorialEliminado">Historial eliminado</string>
 
     <!-- Acerca de -->
     <string name="aboutText">Acerca de</string>
