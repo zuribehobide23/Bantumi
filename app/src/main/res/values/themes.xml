@@ -30,4 +30,24 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
+
+    <style name="Theme.Bantumi.Blue" parent="Theme.Bantumi">
+        <item name="colorPrimary">#1976D2</item>
+        <item name="colorSecondary">#2196F3</item>
+    </style>
+
+    <style name="Theme.Bantumi.Green" parent="Theme.Bantumi">
+        <item name="colorPrimary">#2E7D32</item>
+        <item name="colorSecondary">#388E3C</item>
+    </style>
+
+    <style name="Theme.Bantumi.Orange" parent="Theme.Bantumi">
+        <item name="colorPrimary">#E65100</item>
+        <item name="colorSecondary">#F57C00</item>
+    </style>
+
+    <style name="Theme.Bantumi.Purple" parent="Theme.Bantumi">
+        <item name="colorPrimary">#4A148C</item>
+        <item name="colorSecondary">#7B1FA2</item>
+    </style>
 </resources>

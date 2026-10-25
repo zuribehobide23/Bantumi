@@ -11,12 +11,16 @@ public class Resultado {
     private String fechaHora;
     private int almacenJugador;
     private int almacenComputador;
+    private long duracionSegundos;
+    private int numInicialSemillas;
 
-    public Resultado(String nombreJugador, String fechaHora, int almacenJugador, int almacenComputador) {
+    public Resultado(String nombreJugador, String fechaHora, int almacenJugador, int almacenComputador, long duracionSegundos, int numInicialSemillas) {
         this.nombreJugador = nombreJugador;
         this.fechaHora = fechaHora;
         this.almacenJugador = almacenJugador;
         this.almacenComputador = almacenComputador;
+        this.duracionSegundos = duracionSegundos;
+        this.numInicialSemillas = numInicialSemillas;
     }
 
     public long getId() {
@@ -41,5 +45,21 @@ public class Resultado {
 
     public int getAlmacenComputador() {
         return almacenComputador;
+    }
+
+    public long getDuracionSegundos() {
+        return duracionSegundos;
+    }
+
+    public void setDuracionSegundos(long duracionSegundos) {
+        this.duracionSegundos = duracionSegundos;
+    }
+
+    public int getNumInicialSemillas() {
+        return numInicialSemillas;
+    }
+
+    public void setNumInicialSemillas(int numInicialSemillas) {
+        this.numInicialSemillas = numInicialSemillas;
     }
 }

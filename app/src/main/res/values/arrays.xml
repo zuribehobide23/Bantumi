@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="reply_entries">
+        <item>Responder a todos</item>
+        <item>Responder</item>
+        <item>Reenviar</item>
+    </string-array>
+    <string-array name="reply_values">
+        <item>reply_all</item>
+        <item>reply</item>
+        <item>forward</item>
+    </string-array>
+    <string-array name="num_semillas_entries">
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="num_semillas_values">
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="turno_entries">
+        <item>Jugador 1</item>
+        <item>Jugador 2 (Computador)</item>
+        <item>Aleatorio</item>
+    </string-array>
+    <string-array name="turno_values">
+        <item>turnoJ1</item>
+        <item>turnoJ2</item>
+        <item>turnoAleatorio</item>
+    </string-array>
+    <string-array name="color_entries">
+        <item>@string/color_azul</item>
+        <item>@string/color_verde</item>
+        <item>@string/color_naranja</item>
+        <item>@string/color_morado</item>
+    </string-array>
+    <string-array name="color_values">
+        <item>azul</item>
+        <item>verde</item>
+        <item>naranja</item>
+        <item>morado</item>
+    </string-array>
+    <string-array name="color_personalizado_entries">
+        <item>@string/color_blanco</item>
+        <item>@string/color_negro</item>
+        <item>@string/color_gris</item>
+        <item>@string/color_rojo</item>
+        <item>@string/color_verde</item>
+        <item>@string/color_azul</item>
+        <item>@string/color_amarillo</item>
+        <item>@string/color_magenta</item>
+        <item>@string/color_cian</item>
+    </string-array>
+    <string-array name="color_personalizado_values">
+        <item>blanco</item>
+        <item>negro</item>
+        <item>gris</item>
+        <item>rojo</item>
+        <item>verde</item>
+        <item>azul</item>
+        <item>amarillo</item>
+        <item>magenta</item>
+        <item>cian</item>
+    </string-array>
+    <string-array name="idioma_entries">
+        <item>Español</item>
+        <item>English</item>
+        <item>Euskera</item>
+    </string-array>
+    <string-array name="idioma_values">
+        <item>es</item>
+        <item>en</item>
+        <item>eu</item>
+    </string-array>
+</resources>
