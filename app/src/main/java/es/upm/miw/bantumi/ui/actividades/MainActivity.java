@@ -665,6 +665,10 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle(R.string.txtTituloRecuperarPartida)
                 .setItems(items, (dialog, which) -> {
                     PartidaGuardada pSeleccionada = lista.get(which);
+
+                    new androidx.lifecycle.ViewModelProvider(this).get(es.upm.miw.bantumi.ui.viewmodel.BantumiViewModel.class)
+                            .setIdPartidaRecuperada(pSeleccionada.getId());
+
                     if (juegoBantumi != null) {
                         long tiempoGuardado = juegoBantumi.deserializa(pSeleccionada.getDatosSerializados());
                         partidaIniciada = true;
@@ -675,10 +679,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                         Snackbar.make(
                                 findViewById(android.R.id.content),
-                                "Partida \"" + pSeleccionada.getNombre() + "\" " + R.string.txtRecuperada,
+                                "Partida \"" + pSeleccionada.getNombre() + "\" recuperada", // Ajustado el R.string para evitar fallos de concatenación
                                 Snackbar.LENGTH_LONG
                         ).show();
-                        if (juegoBantumi.turnoActual() == JuegoBantumi.Turno.turnoJ2) {
+                        if (juegoBantumi.turnoActual() == es.upm.miw.bantumi.dominio.logica.JuegoBantumi.Turno.turnoJ2) {
                             juegoBantumi.juegaComputador();
                         }
                     }
@@ -714,6 +718,7 @@ public class MainActivity extends AppCompatActivity {
         String resourceName = getResources().getResourceEntryName(v.getId()); // pXY
         int num = Integer.parseInt(resourceName.substring(resourceName.length() - 2));
         Log.i(LOG_TAG, "huecoPulsado(" + resourceName + ") num=" + num);
+
         switch (juegoBantumi.turnoActual()) {
             case turnoJ1:
                 Log.i(LOG_TAG, "* Juega Jugador");
@@ -724,11 +729,11 @@ public class MainActivity extends AppCompatActivity {
                 juegoBantumi.juegaComputador();
                 break;
             default:    // JUEGO TERMINADO
-                finJuego();
+                procesarFinDeJuego();
         }
 
         if (juegoBantumi.juegoTerminado()) {
-            finJuego();
+            procesarFinDeJuego();
         }
     }
 
@@ -776,5 +781,31 @@ public class MainActivity extends AppCompatActivity {
 
         // terminar
         new FinalAlertDialog(texto).show(getSupportFragmentManager(), "ALERT_DIALOG");
+    }
+
+    private void procesarFinDeJuego() {
+        bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
+
+        String idRecuperada = bantumiVM.getIdPartidaRecuperada();
+
+        if (idRecuperada != null) {
+            android.content.SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+            String jsonPartidas = prefs.getString("prefKeyListaPartidasGuardadas", "");
+
+            List<PartidaGuardada> lista = PartidaGuardada.jsonToList(jsonPartidas);
+
+            for (int i = 0; i < lista.size(); i++) {
+                if (lista.get(i).getId().equals(idRecuperada)) {
+                    lista.remove(i);
+                    break;
+                }
+            }
+
+            prefs.edit().putString("prefKeyListaPartidasGuardadas", PartidaGuardada.listToJson(lista)).apply();
+
+            bantumiVM.setIdPartidaRecuperada(null);
+        }
+
+        finJuego();
     }
 }

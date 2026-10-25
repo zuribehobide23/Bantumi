@@ -38,4 +38,7 @@ public interface ResultadoDao {
 
     @Query("DELETE FROM resultados")
     void eliminarTodo();
+
+    @Query("DELETE FROM resultados WHERE id = :idPartida")
+    void borrarPartidaRecuperada(long idPartida);
 }
