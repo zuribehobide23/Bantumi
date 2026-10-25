@@ -1,0 +1,19 @@
+Práctica: Bantumi
+Autora: Zuriñe Behobide Zabalegui
+Asignatura: Front-end para Móviles (FEM)
+
+1. Descripción del proyecto
+
+Esta aplicación es una implementación del juego de mesa Bantumi para un jugador contra el computador.
+
+2. Funcionalidades extra implementadas
+
+- Posibilidad de introducir manualmente el número inicial de semillas.
+- Posibilidad de seleccionar quién tiene el turno inicial (Jugador, CPU o Aleatorio).
+- Añadir un cronometro para llevar la cuenta del tiempo de juego y guardarlo para recuperar más tarde y mostrarlo en el historial de mejores resultados.
+- Posibilidad de guardar y recuperar más de una partida en el tiempo guardado.
+- Menú de opciones para ordenar los mejores resultados de forma ascendente/descendente y filtrar victorias por jugador.
+- Resaltar la casilla elegida por cada jugador.
+- Añadir opciones para cambiar los colores de la aplicación, así como el fondo, las semillas, los iconos, etc.
+- Permitir cambiar el idioma de la aplicación (Español, Inglés o Euskera).
+- Añadir flecha de retroceso para salir de las preferencias.
