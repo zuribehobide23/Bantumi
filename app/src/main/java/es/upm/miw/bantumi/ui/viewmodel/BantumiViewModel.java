@@ -11,6 +11,8 @@ import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
 
 public class BantumiViewModel extends ViewModel {
 
+    private String idPartidaRecuperada = null;
+
     private ArrayList<MutableLiveData<Integer>> tablero;
 
     private MutableLiveData<JuegoBantumi.Turno> turno;
@@ -64,5 +66,13 @@ public class BantumiViewModel extends ViewModel {
             throw new ArrayIndexOutOfBoundsException();
         }
         tablero.get(pos).setValue(v);
+    }
+
+    public void setIdPartidaRecuperada(String id) {
+        this.idPartidaRecuperada = id;
+    }
+
+    public String getIdPartidaRecuperada() {
+        return this.idPartidaRecuperada;
     }
 }
