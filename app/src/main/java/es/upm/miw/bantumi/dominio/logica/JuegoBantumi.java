@@ -204,16 +204,59 @@ public class JuegoBantumi {
      * @return juego serializado
      */
     public String serializa() {
-        // @TODO
-        return null;
+        return serializa(0);
+    }
+
+    /**
+     * Devuelve una cadena que representa el estado completo del juego con tiempo
+     *
+     * @param tiempoTranscurridoSegundos tiempo transcurrido en segundos
+     * @return juego serializado
+     */
+    public String serializa(long tiempoTranscurridoSegundos) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(turnoActual() != null ? turnoActual().name() : Turno.turnoJ1.name()).append(";");
+        sb.append(numInicialSemillas).append(";");
+        for (int i = 0; i < NUM_POSICIONES; i++) {
+            sb.append(getSemillas(i));
+            if (i < NUM_POSICIONES - 1) {
+                sb.append(",");
+            }
+        }
+        sb.append(";").append(tiempoTranscurridoSegundos);
+        return sb.toString();
     }
 
     /**
      * Recupera el estado del juego a partir de su representación
      *
      * @param juegoSerializado cadena que representa el estado completo del juego
+     * @return tiempo transcurrido en segundos
      */
-    public void deserializa(String juegoSerializado) {
-        // @TODO
+    public long deserializa(String juegoSerializado) {
+        if (juegoSerializado == null || juegoSerializado.trim().isEmpty()) {
+            return 0;
+        }
+        try {
+            String[] partes = juegoSerializado.split(";");
+            if (partes.length >= 3) {
+                Turno turno = Turno.valueOf(partes[0]);
+                setTurno(turno);
+
+                String[] semillasArr = partes[2].split(",");
+                for (int i = 0; i < NUM_POSICIONES && i < semillasArr.length; i++) {
+                    setSemillas(i, Integer.parseInt(semillasArr[i]));
+                }
+
+                long tiempo = 0;
+                if (partes.length >= 4) {
+                    tiempo = Long.parseLong(partes[3]);
+                }
+                return tiempo;
+            }
+        } catch (Exception e) {
+            Log.e("MiW", "Error deserializando juego", e);
+        }
+        return 0;
     }
 }

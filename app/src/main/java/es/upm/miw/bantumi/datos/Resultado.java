@@ -11,12 +11,14 @@ public class Resultado {
     private String fechaHora;
     private int almacenJugador;
     private int almacenComputador;
+    private long duracionSegundos;
 
-    public Resultado(String nombreJugador, String fechaHora, int almacenJugador, int almacenComputador) {
+    public Resultado(String nombreJugador, String fechaHora, int almacenJugador, int almacenComputador, long duracionSegundos) {
         this.nombreJugador = nombreJugador;
         this.fechaHora = fechaHora;
         this.almacenJugador = almacenJugador;
         this.almacenComputador = almacenComputador;
+        this.duracionSegundos = duracionSegundos;
     }
 
     public long getId() {
@@ -41,5 +43,13 @@ public class Resultado {
 
     public int getAlmacenComputador() {
         return almacenComputador;
+    }
+
+    public long getDuracionSegundos() {
+        return duracionSegundos;
+    }
+
+    public void setDuracionSegundos(long duracionSegundos) {
+        this.duracionSegundos = duracionSegundos;
     }
 }

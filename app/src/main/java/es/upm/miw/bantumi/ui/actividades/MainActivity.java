@@ -3,10 +3,12 @@ package es.upm.miw.bantumi.ui.actividades;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -40,11 +42,23 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_MIW = "MiW";
     public JuegoBantumi juegoBantumi;
     private BantumiViewModel bantumiVM;
+    private Chronometer cronometro;
+    private boolean partidaIniciada = false;
     int numInicialSemillas;
     private boolean puntuacionGuardada = false;
     private String lastNumSemillas = "";
     private String lastTurnoInicial = "";
     private String lastNombreJugador = "";
+
+    private void iniciarCronometro() {
+        if (!partidaIniciada) {
+            partidaIniciada = true;
+            if (cronometro != null) {
+                cronometro.setBase(SystemClock.elapsedRealtime());
+                cronometro.start();
+            }
+        }
+    }
 
     public void iniciarNuevaPartida() {
         android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
@@ -85,6 +99,12 @@ public class MainActivity extends AppCompatActivity {
             juegoBantumi = new JuegoBantumi(bantumiVM, turnoInicial, numInicialSemillas);
             juegoBantumi.inicializar(turnoInicial);
         }
+
+        partidaIniciada = false;
+        if (cronometro != null) {
+            cronometro.stop();
+            cronometro.setBase(SystemClock.elapsedRealtime());
+        }
         puntuacionGuardada = false;
     }
 
@@ -101,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Instancia el ViewModel y el juego, y asigna observadores a los huecos
+        cronometro = findViewById(R.id.cronometro);
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
         iniciarNuevaPartida();
         crearObservadores();
@@ -210,6 +231,8 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         } else if (itemId == R.id.opcReiniciarPartida) {
             new RestartAlertDialog().show(getSupportFragmentManager(), "RESTART_DIALOG");
+        } else if (itemId == R.id.opcGuardarPartida) {
+            guardarPartida();
         } else if (itemId == R.id.opcRecuperarPartida) {
             recuperarPartida();
         } else if (itemId == R.id.opcMejoresResultados) {
@@ -240,8 +263,10 @@ public class MainActivity extends AppCompatActivity {
         String[] items = new String[resultados.size()];
         for (int i = 0; i < resultados.size(); i++) {
             Resultado r = resultados.get(i);
-            items[i] = String.format(Locale.getDefault(), "%d. (%s) -> J1: %d | J2: %d",
-                    i + 1, r.getFechaHora(), r.getAlmacenJugador(), r.getAlmacenComputador());
+            long seg = r.getDuracionSegundos();
+            String duracion = String.format(Locale.getDefault(), "%02d:%02d", seg / 60, seg % 60);
+            items[i] = String.format(Locale.getDefault(), "%d. [%s] (%s) -> J%s: %d | J2: %d",
+                    i + 1, duracion, r.getFechaHora(), r.getNombreJugador(), r.getAlmacenJugador(), r.getAlmacenComputador());
         }
 
         new AlertDialog.Builder(this)
@@ -266,13 +291,52 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    public void guardarPartida() {
+        if (juegoBantumi == null) return;
+        long segundos = 0;
+        if (partidaIniciada && cronometro != null) {
+            long tiempoMs = SystemClock.elapsedRealtime() - cronometro.getBase();
+            segundos = Math.max(0, tiempoMs / 1000);
+        }
+        String juegoSerializado = juegoBantumi.serializa(segundos);
+        android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.edit().putString("prefKeyPartidaGuardada", juegoSerializado).apply();
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                getString(R.string.txtPartidaGuardada),
+                Snackbar.LENGTH_LONG
+        ).show();
+    }
+
     public void recuperarPartida() {
         new RecoverAlertDialog(() -> {
-            Snackbar.make(
-                    findViewById(android.R.id.content),
-                    getString(R.string.txtSinImplementar),
-                    Snackbar.LENGTH_LONG
-            ).show();
+            android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+            String partidaGuardada = preferences.getString("prefKeyPartidaGuardada", null);
+            if (partidaGuardada == null || partidaGuardada.trim().isEmpty()) {
+                Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.txtSinPartidaGuardada),
+                        Snackbar.LENGTH_LONG
+                ).show();
+                return;
+            }
+            if (juegoBantumi != null) {
+                long tiempoGuardado = juegoBantumi.deserializa(partidaGuardada);
+                partidaIniciada = true;
+                puntuacionGuardada = false;
+                if (cronometro != null) {
+                    cronometro.setBase(SystemClock.elapsedRealtime() - (tiempoGuardado * 1000));
+                    cronometro.start();
+                }
+                Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.txtPartidaRecuperada),
+                        Snackbar.LENGTH_LONG
+                ).show();
+                if (juegoBantumi.turnoActual() == JuegoBantumi.Turno.turnoJ2) {
+                    juegoBantumi.juegaComputador();
+                }
+            }
         }).show(getSupportFragmentManager(), "RECOVER_DIALOG");
     }
 
@@ -282,6 +346,9 @@ public class MainActivity extends AppCompatActivity {
      * @param v Vista pulsada (hueco)
      */
     public void huecoPulsado(@NonNull View v) {
+        if (!partidaIniciada) {
+            iniciarCronometro();
+        }
         String resourceName = getResources().getResourceEntryName(v.getId()); // pXY
         int num = Integer.parseInt(resourceName.substring(resourceName.length() - 2));
         Log.i(LOG_TAG, "huecoPulsado(" + resourceName + ") num=" + num);
@@ -307,6 +374,13 @@ public class MainActivity extends AppCompatActivity {
      * El juego ha terminado. Volver a jugar?
      */
     private void finJuego() {
+        long duracionSegundos = 0;
+        if (cronometro != null) {
+            cronometro.stop();
+            long tiempoMs = SystemClock.elapsedRealtime() - cronometro.getBase();
+            duracionSegundos = Math.max(0, tiempoMs / 1000);
+        }
+
         if (!puntuacionGuardada) {
             puntuacionGuardada = true;
             String nombreJugador = androidx.preference.PreferenceManager
@@ -317,12 +391,12 @@ public class MainActivity extends AppCompatActivity {
             int semillasJ2 = juegoBantumi.getSemillas(13);
 
             Resultado resultado = new Resultado(
-                    nombreJugador, fechaHora, semillasJ1, semillasJ2
+                    nombreJugador, fechaHora, semillasJ1, semillasJ2, duracionSegundos
             );
             BantumiDatabase.getInstance(this)
                     .resultadoDao()
                     .insertar(resultado);
-            Log.i(LOG_TAG, "Puntuación guardada en Room: " + nombreJugador + " - J1:" + semillasJ1 + " J2:" + semillasJ2);
+            Log.i(LOG_TAG, "Puntuación guardada en Room: " + nombreJugador + " (" + duracionSegundos + "s) - J1:" + semillasJ1 + " J2:" + semillasJ2);
         }
 
         String texto = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)

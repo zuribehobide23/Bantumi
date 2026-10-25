@@ -4,6 +4,7 @@
     <string name="txtPlayer1">Jugador 1</string>
     <string name="txtPlayer2">Jugador 2</string>
     <string name="txtBtnReset">Reset</string>
+    <string name="txtBtnIniciar">Iniciar</string>
 
     <!-- Valores del juego -->
     <integer name="intNumInicialSemillas">4</integer>
@@ -17,6 +18,9 @@
     <string name="txtOpcionGuardar">Guardar Partida</string>
     <string name="txtOpcionRecuperar">Recuperar Partida</string>
     <string name="txtOpcionMejoresResultados">Mejores Resultados</string>
+    <string name="txtPartidaGuardada">Partida guardada correctamente</string>
+    <string name="txtSinPartidaGuardada">No hay ninguna partida guardada</string>
+    <string name="txtPartidaRecuperada">Partida recuperada correctamente</string>
 
     <!-- Acerca de -->
     <string name="aboutText">Acerca de</string>
