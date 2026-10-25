@@ -264,6 +264,8 @@ public class MainActivity extends AppCompatActivity {
             iniciarNuevaPartida();
         }
         aplicarColoresPersonalizados();
+
+        invalidateOptionsMenu();
     }
 
     private void crearObservadores() {
