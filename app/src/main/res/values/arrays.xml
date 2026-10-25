@@ -32,4 +32,34 @@
         <item>turnoJ2</item>
         <item>turnoAleatorio</item>
     </string-array>
+    <string-array name="color_entries">
+        <item>Azul</item>
+        <item>Verde</item>
+        <item>Naranja</item>
+        <item>Morado</item>
+    </string-array>
+    <string-array name="color_values">
+        <item>azul</item>
+        <item>verde</item>
+        <item>naranja</item>
+        <item>morado</item>
+    </string-array>
+    <string-array name="color_personalizado_entries">
+        <item>Blanco</item>
+        <item>Negro</item>
+        <item>Gris</item>
+        <item>Rojo</item>
+        <item>Verde</item>
+        <item>Azul</item>
+        <item>Amarillo</item>
+    </string-array>
+    <string-array name="color_personalizado_values">
+        <item>blanco</item>
+        <item>negro</item>
+        <item>gris</item>
+        <item>rojo</item>
+        <item>verde</item>
+        <item>azul</item>
+        <item>amarillo</item>
+    </string-array>
 </resources>

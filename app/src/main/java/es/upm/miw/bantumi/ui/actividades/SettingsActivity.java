@@ -17,6 +17,23 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        String temaActual = preferences.getString("prefKeyColorTema", "azul");
+        switch (temaActual) {
+            case "verde":
+                setTheme(R.style.Theme_Bantumi_Green);
+                break;
+            case "naranja":
+                setTheme(R.style.Theme_Bantumi_Orange);
+                break;
+            case "morado":
+                setTheme(R.style.Theme_Bantumi_Purple);
+                break;
+            default:
+                setTheme(R.style.Theme_Bantumi_Blue);
+                break;
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         getSupportFragmentManager()
@@ -35,6 +52,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
+        private android.content.SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
@@ -62,21 +81,28 @@ public class SettingsActivity extends AppCompatActivity {
                 });
             }
 
-            // Monitorización de preferencia SYNC
-            Preference preferenceSync = findPreference("sync");
-            if (preferenceSync != null) {
-                preferenceSync.setOnPreferenceChangeListener(
-                        new Preference.OnPreferenceChangeListener() {
-                            @Override
-                            public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
-                                Log.i(
-                                        MainActivity.TAG_MIW,
-                                        "onCreatePreferences(): " + preference + " = " + newValue
-                                );
-                                return true;
-                            }
-                        }
-                );
+            preferenceChangeListener = (sharedPreferences, key) -> {
+                if ("prefKeyColorTema".equals(key)) {
+                    if (getActivity() != null) {
+                        getActivity().recreate();
+                    }
+                }
+            };
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            if (getPreferenceManager().getSharedPreferences() != null) {
+                getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+            }
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            if (getPreferenceManager().getSharedPreferences() != null) {
+                getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
             }
         }
     }

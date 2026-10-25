@@ -52,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
     private String lastNumSemillas = "";
     private String lastTurnoInicial = "";
     private String lastNombreJugador = "";
+    private String lastColorFondo = "";
+    private String lastColorCasillas = "";
+    private String lastColorSemillas = "";
+    private String lastColorNombre = "";
+    private String lastColorIconos = "";
+    private String lastColorTurnoFondo = "";
+    private String temaActual = "azul";
     private boolean esOrdenAscendente = false;
     private String jugadorFiltro = null;
     private int ultimaCasillaResaltada = -1;
@@ -139,6 +146,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        temaActual = preferences.getString("prefKeyColorTema", "azul");
+        switch (temaActual) {
+            case "verde":
+                setTheme(R.style.Theme_Bantumi_Green);
+                break;
+            case "naranja":
+                setTheme(R.style.Theme_Bantumi_Orange);
+                break;
+            case "morado":
+                setTheme(R.style.Theme_Bantumi_Purple);
+                break;
+            default:
+                setTheme(R.style.Theme_Bantumi_Blue);
+                break;
+        }
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -152,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
         cronometro = findViewById(R.id.cronometro);
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
 
-        android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
         String numSemillasStr = preferences.getString("prefKeyNumInicialSemillas", String.valueOf(getResources().getInteger(R.integer.intNumInicialSemillas)));
         try {
             numInicialSemillas = Integer.parseInt(numSemillasStr);
@@ -191,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
             iniciarNuevaPartida();
         }
         crearObservadores();
+        aplicarColoresPersonalizados();
     }
 
     @Override
@@ -210,25 +234,42 @@ public class MainActivity extends AppCompatActivity {
         String numSemillasStr = preferences.getString("prefKeyNumInicialSemillas", String.valueOf(getResources().getInteger(R.integer.intNumInicialSemillas)));
         String turnoStr = preferences.getString("prefKeyTurnoInicial", "turnoJ1");
         String nombreJugador = preferences.getString("prefKeyNombreJugador", getString(R.string.txtPlayer1));
+        String temaStr = preferences.getString("prefKeyColorTema", "azul");
+
+        String cFondo = preferences.getString("prefKeyColorFondoJuego", "blanco");
+        String cCasillas = preferences.getString("prefKeyColorCasillas", "gris");
+        String cSemillas = preferences.getString("prefKeyColorSemillas", "negro");
+        String cNombre = preferences.getString("prefKeyColorNombreJugador", "negro");
+        String cIconos = preferences.getString("prefKeyColorIconos", "azul");
+        String cTurnoFondo = preferences.getString("prefKeyColorTurnoFondo", "azul");
 
         TextView tvPlayer1 = findViewById(R.id.tvPlayer1);
         if (tvPlayer1 != null) {
             tvPlayer1.setText(nombreJugador);
         }
 
+        if (!temaStr.equals(temaActual)) {
+            recreate();
+            return;
+        }
+
+        if (!cFondo.equals(lastColorFondo) || !cCasillas.equals(lastColorCasillas) ||
+                !cSemillas.equals(lastColorSemillas) || !cNombre.equals(lastColorNombre) ||
+                !cIconos.equals(lastColorIconos) || !cTurnoFondo.equals(lastColorTurnoFondo)) {
+            aplicarColoresPersonalizados();
+            marcarTurno(juegoBantumi.turnoActual());
+        }
+
         if (!numSemillasStr.equals(lastNumSemillas) || !turnoStr.equals(lastTurnoInicial) || !nombreJugador.equals(lastNombreJugador)) {
             iniciarNuevaPartida();
         }
+        aplicarColoresPersonalizados();
     }
 
-    /**
-     * Crea y subscribe los observadores asignados a las posiciones del tablero.
-     * Si se modifica el contenido del tablero -> se actualiza la vista.
-     */
     private void crearObservadores() {
         for (int i = 0; i < JuegoBantumi.NUM_POSICIONES; i++) {
             int finalI = i;
-            bantumiVM.getNumSemillas(i).observe(    // Huecos y almacenes
+            bantumiVM.getNumSemillas(i).observe(
                     this,
                     new Observer<Integer>() {
                         @Override
@@ -237,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         }
-        bantumiVM.getTurno().observe(   // Turno
+        bantumiVM.getTurno().observe(
                 this,
                 new Observer<JuegoBantumi.Turno>() {
                     @Override
@@ -248,26 +289,25 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    /**
-     * Indica el turno actual cambiando el color del texto
-     *
-     * @param turnoActual turno actual
-     */
     private void marcarTurno(@NonNull JuegoBantumi.Turno turnoActual) {
         TextView tvJugador1 = findViewById(R.id.tvPlayer1);
         TextView tvJugador2 = findViewById(R.id.tvPlayer2);
+        android.content.SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        String cTurnoFondo = prefs.getString("prefKeyColorTurnoFondo", "azul");
+        int colorTurnoBg = obtenerColor(cTurnoFondo, getColor(android.R.color.holo_blue_light));
+
         switch (turnoActual) {
             case turnoJ1:
                 tvJugador1.setTextColor(getColor(R.color.white));
-                tvJugador1.setBackgroundColor(getColor(android.R.color.holo_blue_light));
-                tvJugador2.setTextColor(getColor(R.color.black));
-                tvJugador2.setBackgroundColor(getColor(R.color.white));
+                tvJugador1.setBackgroundColor(colorTurnoBg);
+                tvJugador2.setTextColor(getColor(android.R.color.black));
+                tvJugador2.setBackgroundColor(getColor(android.R.color.transparent));
                 break;
             case turnoJ2:
                 tvJugador1.setTextColor(getColor(R.color.black));
-                tvJugador1.setBackgroundColor(getColor(R.color.white));
+                tvJugador1.setBackgroundColor(getColor(android.R.color.transparent));
                 tvJugador2.setTextColor(getColor(R.color.white));
-                tvJugador2.setBackgroundColor(getColor(android.R.color.holo_blue_light));
+                tvJugador2.setBackgroundColor(colorTurnoBg);
                 break;
             default:
                 tvJugador1.setTextColor(getColor(R.color.black));
@@ -275,15 +315,73 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Muestra el valor <i>valor</i> en la posición <i>pos</i>
-     *
-     * @param pos posición a actualizar
-     * @param valor valor a mostrar
-     */
+    private int obtenerColor(String valorColor, int defColor) {
+        if (valorColor == null || valorColor.trim().isEmpty()) return defColor;
+        try {
+            if (valorColor.startsWith("#")) {
+                return android.graphics.Color.parseColor(valorColor);
+            }
+        } catch (Exception ignored) {}
+        switch (valorColor) {
+            case "blanco": return getColor(android.R.color.white);
+            case "negro": return getColor(android.R.color.black);
+            case "rojo": return getColor(android.R.color.holo_red_dark);
+            case "verde": return getColor(android.R.color.holo_green_dark);
+            case "azul": return getColor(android.R.color.holo_blue_dark);
+            case "naranja": return getColor(android.R.color.holo_orange_dark);
+            case "amarillo": return getColor(android.R.color.holo_orange_dark);
+            case "morado": return getColor(android.R.color.holo_purple);
+            case "gris": return getColor(android.R.color.darker_gray);
+            default: return defColor;
+        }
+    }
+
+    private void aplicarColoresPersonalizados() {
+        android.content.SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+
+        String cFondo = prefs.getString("prefKeyColorFondoJuego", "blanco");
+        String cTurnoFondo = prefs.getString("prefKeyColorTurnoFondo", "azul");
+        View mainView = findViewById(R.id.main);
+        if (mainView != null) {
+            mainView.setBackgroundColor(obtenerColor(cFondo, getColor(android.R.color.white)));
+        }
+
+        String cNombre = prefs.getString("prefKeyColorNombreJugador", "negro");
+        int colorNombre = obtenerColor(cNombre, getColor(android.R.color.black));
+        TextView tv1 = findViewById(R.id.tvPlayer1);
+        TextView tv2 = findViewById(R.id.tvPlayer2);
+        if (tv1 != null) tv1.setTextColor(colorNombre);
+        if (tv2 != null) tv2.setTextColor(colorNombre);
+
+        String cCasillas = prefs.getString("prefKeyColorCasillas", "gris");
+        String cSemillas = prefs.getString("prefKeyColorSemillas", "negro");
+        int colorCasilla = obtenerColor(cCasillas, getColor(android.R.color.darker_gray));
+        int colorTextoSemilla = obtenerColor(cSemillas, getColor(android.R.color.black));
+
+        for (int i = 0; i < JuegoBantumi.NUM_POSICIONES; i++) {
+            String num2digitos = String.format(Locale.getDefault(), "%02d", i);
+            int idBoton = getResources().getIdentifier("casilla_" + num2digitos, "id", getPackageName());
+            if (idBoton != 0) {
+                View viewHueco = findViewById(idBoton);
+                if (viewHueco != null) {
+                    viewHueco.setBackgroundTintList(android.content.res.ColorStateList.valueOf(colorCasilla));
+                    if (viewHueco instanceof TextView) {
+                        ((TextView) viewHueco).setTextColor(colorTextoSemilla);
+                    }
+                }
+            }
+        }
+
+        lastColorFondo = cFondo;
+        lastColorCasillas = cCasillas;
+        lastColorSemillas = cSemillas;
+        lastColorNombre = cNombre;
+        lastColorIconos = prefs.getString("prefKeyColorIconos", "azul");
+        lastColorTurnoFondo = cTurnoFondo;
+    }
+
     private void mostrarValor(int pos, int valor) {
         String num2digitos = String.format(Locale.getDefault(), "%02d", pos);
-        // Los identificadores de los huecos tienen el formato casilla_XX
         int idBoton = getResources().getIdentifier("casilla_" + num2digitos, "id", getPackageName());
         if (0 != idBoton) {
             TextView viewHueco = findViewById(idBoton);
@@ -294,6 +392,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.opciones_menu, menu);
+        android.content.SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        String cIconos = prefs.getString("prefKeyColorIconos", "azul");
+        int colorIcono = obtenerColor(cIconos, getColor(android.R.color.holo_blue_dark));
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            if (item.getIcon() != null) {
+                item.getIcon().setTint(colorIcono);
+            }
+        }
         return true;
     }
 
@@ -477,7 +584,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText input = new EditText(this);
         input.setSingleLine(true);
         String fechaHoraDefault = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault()).format(new Date());
-        input.setText("Partida " + fechaHoraDefault);
+        input.setText(getString(R.string.app_name) + " " + fechaHoraDefault);
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.txtTituloGuardarPartida)
@@ -626,7 +733,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * El juego ha terminado. Volver a jugar?
+     * El juego ha territorizado / terminado. Volver a jugar?
      */
     private void finJuego() {
         long duracionSegundos = 0;

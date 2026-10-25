@@ -57,6 +57,15 @@
     <string name="prefTituloNumInicialSemillas">Número inicial de semillas</string>
     <string name="prefMensajeNumSemillas">Introduce el número inicial de semillas (ej. 4)</string>
     <string name="prefTituloTurnoInicial">Turno inicial</string>
+    <string name="prefTituloApariencia">Apariencia</string>
+    <string name="prefTituloColorTema">Color de tema</string>
+    <string name="prefTituloPersonalizacionColores">Personalización detallada de colores</string>
+    <string name="prefColorFondoJuego">Color de fondo del juego</string>
+    <string name="prefColorCasillas">Color de las casillas</string>
+    <string name="prefColorSemillas">Color de las semillas</string>
+    <string name="prefColorNombreJugador">Color del nombre del jugador</string>
+    <string name="prefColorTurnoFondo">Color de fondo del turno activo</string>
+    <string name="prefColorIconos">Color de los iconos</string>
 
     <!-- Diálogo Final -->
     <string name="txtDialogoFinalTitulo">Fin del juego</string>
