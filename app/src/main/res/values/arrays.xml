@@ -52,8 +52,6 @@
         <item>@string/color_verde</item>
         <item>@string/color_azul</item>
         <item>@string/color_amarillo</item>
-        <item>@string/color_magenta</item>
-        <item>@string/color_cian</item>
     </string-array>
     <string-array name="color_personalizado_values">
         <item>blanco</item>
@@ -63,8 +61,6 @@
         <item>verde</item>
         <item>azul</item>
         <item>amarillo</item>
-        <item>magenta</item>
-        <item>cian</item>
     </string-array>
     <string-array name="idioma_entries">
         <item>Español</item>
