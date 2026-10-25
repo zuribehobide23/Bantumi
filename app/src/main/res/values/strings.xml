@@ -21,6 +21,12 @@
     <string name="txtPartidaGuardada">Partida guardada correctamente</string>
     <string name="txtSinPartidaGuardada">No hay ninguna partida guardada</string>
     <string name="txtPartidaRecuperada">Partida recuperada correctamente</string>
+    <string name="txtTituloGuardarPartida">Guardar Partida</string>
+    <string name="txtMensajeNombreGuardar">Introduce un nombre para la partida:</string>
+    <string name="txtBotonGuardar">Guardar</string>
+    <string name="txtTituloRecuperarPartida">Recuperar Partida</string>
+    <string name="txtDialogoEliminarPartidas">¿Desea eliminar todas las partidas guardadas?</string>
+    <string name="txtPartidasEliminadas">Partidas guardadas eliminadas</string>
 
     <!-- Acerca de -->
     <string name="aboutText">Acerca de</string>

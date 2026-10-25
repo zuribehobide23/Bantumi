@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.datos.BantumiDatabase;
+import es.upm.miw.bantumi.datos.PartidaGuardada;
 import es.upm.miw.bantumi.datos.Resultado;
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
 import es.upm.miw.bantumi.ui.fragmentos.RecoverAlertDialog;
@@ -315,51 +317,126 @@ public class MainActivity extends AppCompatActivity {
 
     public void guardarPartida() {
         if (juegoBantumi == null) return;
-        long segundos = 0;
-        if (partidaIniciada && cronometro != null) {
-            long tiempoMs = SystemClock.elapsedRealtime() - cronometro.getBase();
-            segundos = Math.max(0, tiempoMs / 1000);
-        }
-        String juegoSerializado = juegoBantumi.serializa(segundos);
-        android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.edit().putString("prefKeyPartidaGuardada", juegoSerializado).apply();
-        Snackbar.make(
-                findViewById(android.R.id.content),
-                getString(R.string.txtPartidaGuardada),
-                Snackbar.LENGTH_LONG
-        ).show();
+
+        final EditText input = new EditText(this);
+        input.setSingleLine(true);
+        String fechaHoraDefault = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault()).format(new Date());
+        input.setText("Partida " + fechaHoraDefault);
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.txtTituloGuardarPartida)
+                .setMessage(R.string.txtMensajeNombreGuardar)
+                .setView(input)
+                .setPositiveButton(R.string.txtBotonGuardar, (dialog, which) -> {
+                    String nombrePartida = input.getText().toString().trim();
+                    if (nombrePartida.isEmpty()) {
+                        nombrePartida = "Partida " + fechaHoraDefault;
+                    }
+
+                    long segundos = 0;
+                    if (partidaIniciada && cronometro != null) {
+                        long tiempoMs = SystemClock.elapsedRealtime() - cronometro.getBase();
+                        segundos = Math.max(0, tiempoMs / 1000);
+                    }
+
+                    String datosSerializados = juegoBantumi.serializa(segundos);
+                    String id = String.valueOf(System.currentTimeMillis());
+
+                    android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+                    String jsonExistente = preferences.getString("prefKeyListaPartidasGuardadas", "[]");
+                    List<PartidaGuardada> lista = PartidaGuardada.jsonToList(jsonExistente);
+                    lista.add(0, new PartidaGuardada(id, nombrePartida, fechaHoraDefault, datosSerializados));
+
+                    preferences.edit().putString("prefKeyListaPartidasGuardadas", PartidaGuardada.listToJson(lista)).apply();
+
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            "Partida \"" + nombrePartida + "\" guardada correctamente",
+                            Snackbar.LENGTH_LONG
+                    ).show();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     public void recuperarPartida() {
-        new RecoverAlertDialog(() -> {
-            android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
-            String partidaGuardada = preferences.getString("prefKeyPartidaGuardada", null);
-            if (partidaGuardada == null || partidaGuardada.trim().isEmpty()) {
-                Snackbar.make(
-                        findViewById(android.R.id.content),
-                        getString(R.string.txtSinPartidaGuardada),
-                        Snackbar.LENGTH_LONG
-                ).show();
-                return;
-            }
-            if (juegoBantumi != null) {
-                long tiempoGuardado = juegoBantumi.deserializa(partidaGuardada);
-                partidaIniciada = true;
-                puntuacionGuardada = false;
-                if (cronometro != null) {
-                    cronometro.setBase(SystemClock.elapsedRealtime() - (tiempoGuardado * 1000));
-                    cronometro.start();
+        android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        String jsonExistente = preferences.getString("prefKeyListaPartidasGuardadas", "[]");
+        List<PartidaGuardada> lista = PartidaGuardada.jsonToList(jsonExistente);
+
+        if (lista.isEmpty()) {
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtSinPartidaGuardada),
+                    Snackbar.LENGTH_LONG
+            ).show();
+            return;
+        }
+
+        CharSequence[] items = new CharSequence[lista.size()];
+        String nameJ1 = androidx.preference.PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getString("prefKeyNombreJugador", getString(R.string.txtPlayer1));
+        String nameJ2 = getString(R.string.txtPlayer2);
+
+        for (int i = 0; i < lista.size(); i++) {
+            PartidaGuardada p = lista.get(i);
+            String detalles = "";
+            try {
+                String[] partes = p.getDatosSerializados().split(";");
+                if (partes.length >= 4) {
+                    String[] semillasArr = partes[2].split(",");
+                    int scoreJ1 = Integer.parseInt(semillasArr[6]);
+                    int scoreJ2 = Integer.parseInt(semillasArr[13]);
+                    long seg = Long.parseLong(partes[3]);
+                    String tiempoFormatted = String.format(Locale.getDefault(), "%02d:%02d", seg / 60, seg % 60);
+                    detalles = " (⏱ " + tiempoFormatted + " | " + nameJ1 + ": " + scoreJ1 + " - " + nameJ2 + ": " + scoreJ2 + ")";
                 }
-                Snackbar.make(
-                        findViewById(android.R.id.content),
-                        getString(R.string.txtPartidaRecuperada),
-                        Snackbar.LENGTH_LONG
-                ).show();
-                if (juegoBantumi.turnoActual() == JuegoBantumi.Turno.turnoJ2) {
-                    juegoBantumi.juegaComputador();
-                }
+            } catch (Exception e) {
+                detalles = "";
             }
-        }).show(getSupportFragmentManager(), "RECOVER_DIALOG");
+            items[i] = (i + 1) + ". " + p.getNombre() + detalles;
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.txtTituloRecuperarPartida)
+                .setItems(items, (dialog, which) -> {
+                    PartidaGuardada pSeleccionada = lista.get(which);
+                    if (juegoBantumi != null) {
+                        long tiempoGuardado = juegoBantumi.deserializa(pSeleccionada.getDatosSerializados());
+                        partidaIniciada = true;
+                        puntuacionGuardada = false;
+                        if (cronometro != null) {
+                            cronometro.setBase(SystemClock.elapsedRealtime() - (tiempoGuardado * 1000));
+                            cronometro.start();
+                        }
+                        Snackbar.make(
+                                findViewById(android.R.id.content),
+                                "Partida \"" + pSeleccionada.getNombre() + "\" recuperada",
+                                Snackbar.LENGTH_LONG
+                        ).show();
+                        if (juegoBantumi.turnoActual() == JuegoBantumi.Turno.turnoJ2) {
+                            juegoBantumi.juegaComputador();
+                        }
+                    }
+                })
+                .setNeutralButton(R.string.txtBotonEliminar, (dialog, which) -> {
+                    new AlertDialog.Builder(this)
+                            .setTitle(R.string.txtOpcionRecuperar)
+                            .setMessage(R.string.txtDialogoEliminarPartidas)
+                            .setPositiveButton(android.R.string.ok, (d, w) -> {
+                                preferences.edit().remove("prefKeyListaPartidasGuardadas").apply();
+                                Snackbar.make(
+                                        findViewById(android.R.id.content),
+                                        getString(R.string.txtPartidasEliminadas),
+                                        Snackbar.LENGTH_LONG
+                                ).show();
+                            })
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .show();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     /**
