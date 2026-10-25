@@ -1,15 +1,11 @@
 package es.upm.miw.bantumi.ui.actividades;
 
 import android.os.Bundle;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import es.upm.miw.bantumi.R;

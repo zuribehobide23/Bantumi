@@ -15,7 +15,7 @@
         android:title="@string/txtOpcionGuardar"
         android:icon="@drawable/save_24px"
         android:orderInCategory="10"
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom|withText"
         />
 
     <item
@@ -23,27 +23,27 @@
         android:title="@string/txtOpcionRecuperar"
         android:icon="@drawable/settings_backup_restore_24px"
         android:orderInCategory="15"
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom|withText"
         />
 
     <item
         android:id="@+id/opcMejoresResultados"
         android:title="@string/txtOpcionMejoresResultados"
         android:orderInCategory="20"
-        />
+        app:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/opcAjustes"
         android:title="@string/preferencesText"
         android:icon="@android:drawable/ic_menu_preferences"
         android:orderInCategory="100"
-        />
+        app:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/opcAcercaDe"
         android:title="@string/aboutText"
         android:icon="@android:drawable/ic_menu_info_details"
         android:orderInCategory="200"
-        />
+        app:showAsAction="ifRoom|withText" />
 
 </menu>

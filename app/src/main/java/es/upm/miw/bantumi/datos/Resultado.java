@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey;
 public class Resultado {
     @PrimaryKey(autoGenerate = true)
     private long id;
-    private String nombreJugador;
-    private String fechaHora;
-    private int almacenJugador;
-    private int almacenComputador;
+    private final String nombreJugador;
+    private final String fechaHora;
+    private final int almacenJugador;
+    private final int almacenComputador;
     private long duracionSegundos;
     private int numInicialSemillas;
 
