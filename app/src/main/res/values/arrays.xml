@@ -33,10 +33,10 @@
         <item>turnoAleatorio</item>
     </string-array>
     <string-array name="color_entries">
-        <item>Azul</item>
-        <item>Verde</item>
-        <item>Naranja</item>
-        <item>Morado</item>
+        <item>@string/color_azul</item>
+        <item>@string/color_verde</item>
+        <item>@string/color_naranja</item>
+        <item>@string/color_morado</item>
     </string-array>
     <string-array name="color_values">
         <item>azul</item>
@@ -45,13 +45,15 @@
         <item>morado</item>
     </string-array>
     <string-array name="color_personalizado_entries">
-        <item>Blanco</item>
-        <item>Negro</item>
-        <item>Gris</item>
-        <item>Rojo</item>
-        <item>Verde</item>
-        <item>Azul</item>
-        <item>Amarillo</item>
+        <item>@string/color_blanco</item>
+        <item>@string/color_negro</item>
+        <item>@string/color_gris</item>
+        <item>@string/color_rojo</item>
+        <item>@string/color_verde</item>
+        <item>@string/color_azul</item>
+        <item>@string/color_amarillo</item>
+        <item>@string/color_magenta</item>
+        <item>@string/color_cian</item>
     </string-array>
     <string-array name="color_personalizado_values">
         <item>blanco</item>
@@ -61,6 +63,8 @@
         <item>verde</item>
         <item>azul</item>
         <item>amarillo</item>
+        <item>magenta</item>
+        <item>cian</item>
     </string-array>
     <string-array name="idioma_entries">
         <item>Español</item>

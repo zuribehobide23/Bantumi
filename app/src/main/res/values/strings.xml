@@ -27,11 +27,24 @@
     <string name="txtTituloRecuperarPartida">Recuperar Partida</string>
     <string name="txtDialogoEliminarPartidas">¿Desea eliminar todas las partidas guardadas?</string>
     <string name="txtPartidasEliminadas">Partidas guardadas eliminadas</string>
+    <string name="txtGuardadaCorrectamente">guardada correctamente</string>
 
     <!-- Acerca de -->
     <string name="aboutText">Acerca de</string>
     <string name="aboutTitle">¿Cómo se juega?</string>
-    <string name="aboutMessage">"<p>Cada jugador elige una de sus 6 casillas -que no puede estar vacía-, recoge         todas las semillas que contenga y las “siembra” una a una en sentido contrario a las agujas del reloj         en las siguientes casillas del tablero (excepto en el almacén del oponente). Se aplican las siguientes reglas:</p>         <ul>             <li>Si la siembra termina en el almacén propio, el jugador vuelve a tener el turno</li>             <li>Si la siembra termina en una casilla propia que estuviera vacía, se lleva al almacén                 propio la última semilla y las que hubiera en la casilla opuesta del otro jugador</li>             <li>El juego termina en el momento en que cualquiera de los dos jugadores tenga todas sus                 casillas vacías. Si el contrario dispone de semillas, éstas pasarán al almacén del propietario                 de las casillas</li>         </ul>         <p>Gana el jugador que consiga en su almacén el mayor número de semillas</p>     "</string>
+    <string name="aboutMessage"><p>Cada jugador elige una de sus 6 casillas -que no puede estar vacía-, recoge
+        todas las semillas que contenga y las “siembra” una a una en sentido contrario a las agujas del reloj
+        en las siguientes casillas del tablero (excepto en el almacén del oponente). Se aplican las siguientes reglas:</p>
+        <ul>
+            <li>Si la siembra termina en el almacén propio, el jugador vuelve a tener el turno</li>
+            <li>Si la siembra termina en una casilla propia que estuviera vacía, se lleva al almacén
+                propio la última semilla y las que hubiera en la casilla opuesta del otro jugador</li>
+            <li>El juego termina en el momento en que cualquiera de los dos jugadores tenga todas sus
+                casillas vacías. Si el contrario dispone de semillas, éstas pasarán al almacén del propietario
+                de las casillas</li>
+        </ul>
+        <p>Gana el jugador que consiga en su almacén el mayor número de semillas</p>
+    </string>
 
     <!-- Preferencias -->
     <string name="preferencesText">Ajustes</string>
@@ -40,7 +53,7 @@
     <string name="prefTextoNombreJugador">Pulse para teclear el nombre del jugador</string>
     <string name="prefTituloCategoria2">Ajustes del juego</string>
     <string name="prefTituloCategoria3">Más información…</string>
-    <string name="messages_header">Mensajes / Jugador</string>
+    <string name="messages_header">Messages / Jugador</string>
     <string name="signature_title">Nombre del jugador</string>
     <string name="prefTituloNumInicialSemillas">Número inicial de semillas</string>
     <string name="prefMensajeNumSemillas">Introduce el número inicial de semillas (ej. 4)</string>
@@ -55,6 +68,39 @@
     <string name="prefColorNombreJugador">Color del nombre del jugador</string>
     <string name="prefColorTurnoFondo">Color de fondo del turno activo</string>
     <string name="prefColorIconos">Color de los iconos</string>
+    <string name="turno_aleatorio">Aleatorio</string>
+
+    <!-- Colores Tema y Personalizados -->
+    <string name="color_azul">Azul</string>
+    <string name="color_verde">Verde</string>
+    <string name="color_naranja">Naranja</string>
+    <string name="color_morado">Morado</string>
+
+    <string name="color_blanco">Blanco</string>
+    <string name="color_negro">Negro</string>
+    <string name="color_gris">Gris</string>
+    <string name="color_rojo">Rojo</string>
+    <string name="color_amarillo">Amarillo</string>
+    <string name="color_magenta">Magenta</string>
+    <string name="color_cian">Cian</string>
+
+    <!-- Filtros y Diálogos Resultados -->
+    <string name="titulo_opciones_filtrado">Opciones de filtrado</string>
+    <string name="filtro_semillas_ganador">Por semillas</string>
+    <string name="filtro_partidas_ganadas_jugador">Por partidas ganadas de un jugador</string>
+    <string name="titulo_selecciona_jugador">Selecciona jugador (partidas ganadas)</string>
+    <string name="texto_ganadas_por">Ganadas por </string>
+    <string name="texto_ganadas_por_formato">Ganadas por %s</string>
+    <string name="texto_empate">Empate</string>
+    <string name="boton_filtrar">Filtrar</string>
+    <string name="orden_asc">Orden: ⬆</string>
+    <string name="orden_desc">Orden: ⬇</string>
+    <string name="orden_asc_texto">Orden: ASC</string>
+    <string name="orden_desc_texto">Orden: DESC</string>
+    <string name="ganador_formato">¡Gana %s!</string>
+    <string name="empate_texto">¡¡¡ EMPATE !!!</string>
+    <string name="mensaje_partida_guardada_formato">Partida \"%s\" guardada correctamente</string>
+    <string name="mensaje_partida_recuperada_formato">Partida \"%s\" recuperada</string>
 
     <!-- Diálogo Final -->
     <string name="txtDialogoFinalTitulo">Fin del juego</string>
@@ -67,5 +113,8 @@
     <string name="txtBotonEliminar">Eliminar</string>
     <string name="txtDialogoEliminarResultados">¿Desea eliminar todos los resultados?</string>
     <string name="txtResultadosEliminados">Resultados eliminados correctamente</string>
+    <string name="txtRecuperada">recuperada</string>
+    <string name="txtEmpate">EMPATE</string>
+    <string name="txtGana">Ganador:</string>
 
 </resources>

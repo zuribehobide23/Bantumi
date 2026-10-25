@@ -443,7 +443,7 @@ public class MainActivity extends AppCompatActivity {
         String nombreJ2 = getString(R.string.txtPlayer2);
 
         if (jugadorFiltro != null) {
-            titulo = "Ganadas por " + jugadorFiltro;
+            titulo = String.format(Locale.getDefault(), getString(R.string.texto_ganadas_por_formato), jugadorFiltro);
             if (jugadorFiltro.equalsIgnoreCase(nombreJ2)) {
                 if (esOrdenAscendente) {
                     resultados = dao.obtenerPartidasGanadasPorComputadorAsc();
@@ -458,7 +458,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } else {
-            titulo = "Por semillas";
+            titulo = getString(R.string.filtro_semillas_ganador);
             if (esOrdenAscendente) {
                 resultados = dao.obtenerMejoresResultadosAsc();
             } else {
@@ -503,14 +503,14 @@ public class MainActivity extends AppCompatActivity {
                         i + 1, nameJ1, scoreJ1, nombreJ2, scoreJ2, duracion, r.getFechaHora());
             } else {
                 htmlText = String.format(Locale.getDefault(),
-                        "%d. 🤝 %s (%d) = %s (%d) [Empate] | ⏱ %s (%s)",
-                        i + 1, nameJ1, scoreJ1, nombreJ2, scoreJ2, duracion, r.getFechaHora());
+                        "%d. 🤝 %s (%d) = %s (%d) [%s] | ⏱ %s (%s)",
+                        i + 1, nameJ1, scoreJ1, nombreJ2, scoreJ2, getString(R.string.texto_empate), duracion, r.getFechaHora());
             }
 
             items[i] = android.text.Html.fromHtml(htmlText, android.text.Html.FROM_HTML_MODE_LEGACY);
         }
 
-        String textoBotonOrden = esOrdenAscendente ? "Orden: ASC" : "Orden: DESC";
+        String textoBotonOrden = esOrdenAscendente ? getString(R.string.orden_asc_texto) : getString(R.string.orden_desc_texto);
 
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.txtOpcionMejoresResultados) + " - " + titulo + flechaOrden)
@@ -519,19 +519,19 @@ public class MainActivity extends AppCompatActivity {
                     esOrdenAscendente = !esOrdenAscendente;
                     mostrarMejoresResultadosConFiltro();
                 })
-                .setNeutralButton("Filtrar", (dialog, which) -> abrirDialogoFiltro())
+                .setNeutralButton(R.string.boton_filtrar, (dialog, which) -> abrirDialogoFiltro())
                 .setNegativeButton(android.R.string.ok, null)
                 .show();
     }
 
     private void abrirDialogoFiltro() {
         CharSequence[] opciones = new CharSequence[]{
-                "Por semillas",
-                "Por partidas ganadas de un jugador"
+                getString(R.string.filtro_semillas_ganador),
+                getString(R.string.filtro_partidas_ganadas_jugador)
         };
 
         new AlertDialog.Builder(this)
-                .setTitle("Opciones de filtrado")
+                .setTitle(R.string.titulo_opciones_filtrado)
                 .setItems(opciones, (dialog, which) -> {
                     if (which == 0) {
                         jugadorFiltro = null;
@@ -569,7 +569,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         new AlertDialog.Builder(this)
-                .setTitle("Selecciona jugador (partidas ganadas)")
+                .setTitle(R.string.titulo_selecciona_jugador)
                 .setItems(items, (dialog, which) -> {
                     jugadorFiltro = finalJugadoresList.get(which);
                     mostrarMejoresResultadosConFiltro();
@@ -614,7 +614,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Snackbar.make(
                             findViewById(android.R.id.content),
-                            "Partida \"" + nombrePartida + "\" guardada correctamente",
+                            "Partida \"" + nombrePartida + "\" " + R.string.txtGuardadaCorrectamente,
                             Snackbar.LENGTH_LONG
                     ).show();
                 })
@@ -675,7 +675,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         Snackbar.make(
                                 findViewById(android.R.id.content),
-                                "Partida \"" + pSeleccionada.getNombre() + "\" recuperada",
+                                "Partida \"" + pSeleccionada.getNombre() + "\" " + R.string.txtRecuperada,
                                 Snackbar.LENGTH_LONG
                         ).show();
                         if (juegoBantumi.turnoActual() == JuegoBantumi.Turno.turnoJ2) {
@@ -761,11 +761,15 @@ public class MainActivity extends AppCompatActivity {
             Log.i(LOG_TAG, "Puntuación guardada en Room: " + nombreJugador + " (" + duracionSegundos + "s) - J1:" + semillasJ1 + " J2:" + semillasJ2);
         }
 
+        android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+
+        String nombreJugador = preferences.getString("prefKeyNombreJugador", getString(R.string.txtPlayer1));
+
         String texto = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)
-                ? "Gana Jugador 1"
-                : "Gana Jugador 2";
+                ? getString(R.string.txtGana) + " " + nombreJugador
+                : getString(R.string.txtGana) + " " + getString(R.string.txtPlayer2);
         if (juegoBantumi.getSemillas(6) == 6 * numInicialSemillas) {
-            texto = "¡¡¡ EMPATE !!!";
+            texto = "¡¡¡ " + getString(R.string.txtEmpate) + " !!!";
         }
 
         // @TODO guardar puntuación

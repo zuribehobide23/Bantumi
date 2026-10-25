@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -81,6 +82,14 @@ public class SettingsActivity extends AppCompatActivity {
                 });
             }
 
+            ListPreference prefTurno = findPreference("prefKeyTurnoInicial");
+            if (prefTurno != null && getPreferenceManager().getSharedPreferences() != null) {
+                String nombreJ1 = getPreferenceManager().getSharedPreferences().getString("prefKeyNombreJugador", getString(R.string.txtPlayer1));
+                String nombreJ2 = getString(R.string.txtPlayer2);
+                String aleatorio = getString(R.string.turno_aleatorio);
+                prefTurno.setEntries(new CharSequence[]{nombreJ1, nombreJ2, aleatorio});
+            }
+
             preferenceChangeListener = (sharedPreferences, key) -> {
                 if ("prefKeyColorTema".equals(key)) {
                     if (getActivity() != null) {
@@ -91,6 +100,14 @@ public class SettingsActivity extends AppCompatActivity {
                     androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(
                             androidx.core.os.LocaleListCompat.forLanguageTags(lang)
                     );
+                } else if ("prefKeyNombreJugador".equals(key)) {
+                    ListPreference pTurno = findPreference("prefKeyTurnoInicial");
+                    if (pTurno != null) {
+                        String nombreJ1 = sharedPreferences.getString("prefKeyNombreJugador", getString(R.string.txtPlayer1));
+                        String nombreJ2 = getString(R.string.txtPlayer2);
+                        String aleatorio = getString(R.string.turno_aleatorio);
+                        pTurno.setEntries(new CharSequence[]{nombreJ1, nombreJ2, aleatorio});
+                    }
                 }
             };
         }

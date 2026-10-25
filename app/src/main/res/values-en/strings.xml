@@ -43,6 +43,7 @@
     <string name="prefColorNombreJugador">Player Name Color</string>
     <string name="prefColorTurnoFondo">Active Turn Background Color</string>
     <string name="prefColorIconos">Icons Color</string>
+    <string name="turno_aleatorio">Random</string>
     <string name="txtDialogoFinalTitulo">Game over</string>
     <string name="txtDialogoFinalPregunta">Would you like to play another game?</string>
     <string name="txtDialogoReiniciarPregunta">Do you want to restart the game?</string>
@@ -51,4 +52,38 @@
     <string name="txtBotonEliminar">Delete</string>
     <string name="txtDialogoEliminarResultados">Do you want to delete all the results?</string>
     <string name="txtResultadosEliminados">Results successfully deleted</string>
+    <string name="txtGuardadaCorrectamente">successfully saved</string>
+
+    <string name="color_azul">Blue</string>
+    <string name="color_verde">Green</string>
+    <string name="color_naranja">Orange</string>
+    <string name="color_morado">Purple</string>
+
+    <string name="color_blanco">White</string>
+    <string name="color_negro">Black</string>
+    <string name="color_gris">Gray</string>
+    <string name="color_rojo">Red</string>
+    <string name="color_amarillo">Yellow</string>
+    <string name="color_magenta">Magenta</string>
+    <string name="color_cian">Cyan</string>
+
+    <string name="titulo_opciones_filtrado">Filtering options</string>
+    <string name="filtro_semillas_ganador">By seeds</string>
+    <string name="filtro_partidas_ganadas_jugador">By player\'s won games</string>
+    <string name="titulo_selecciona_jugador">Select player (won games)</string>
+    <string name="texto_ganadas_por">Won by </string>
+    <string name="texto_ganadas_por_formato">Won by %s</string>
+    <string name="texto_empate">Tie</string>
+    <string name="boton_filtrar">Filter</string>
+    <string name="orden_asc">Order: ⬆</string>
+    <string name="orden_desc">Order: ⬇</string>
+    <string name="orden_asc_texto">Order: ASC</string>
+    <string name="orden_desc_texto">Order: DESC</string>
+    <string name="ganador_formato">Winner: %s!</string>
+    <string name="empate_texto">=== TIE ===</string>
+    <string name="mensaje_partida_guardada_formato">Game \"%s\" saved successfully</string>
+    <string name="mensaje_partida_recuperada_formato">Game \"%s\" recovered</string>
+    <string name="txtRecuperada">recovered</string>
+    <string name="txtEmpate">TIE</string>
+    <string name="txtGana">Winner:</string>
 </resources>
