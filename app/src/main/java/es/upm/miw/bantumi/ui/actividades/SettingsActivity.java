@@ -20,6 +20,11 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
         String temaActual = preferences.getString("prefKeyColorTema", "azul");
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         switch (temaActual) {
             case "verde":
                 setTheme(R.style.Theme_Bantumi_Green);
@@ -50,6 +55,12 @@ public class SettingsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -127,5 +138,6 @@ public class SettingsActivity extends AppCompatActivity {
                 getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
             }
         }
+
     }
 }
