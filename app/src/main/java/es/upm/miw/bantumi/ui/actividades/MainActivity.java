@@ -260,13 +260,35 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        String[] items = new String[resultados.size()];
+        CharSequence[] items = new CharSequence[resultados.size()];
+        String nombreJ2 = getString(R.string.txtPlayer2);
+
         for (int i = 0; i < resultados.size(); i++) {
             Resultado r = resultados.get(i);
             long seg = r.getDuracionSegundos();
             String duracion = String.format(Locale.getDefault(), "%02d:%02d", seg / 60, seg % 60);
-            items[i] = String.format(Locale.getDefault(), "%d. [%s] (%s) -> J%s: %d | J2: %d",
-                    i + 1, duracion, r.getFechaHora(), r.getNombreJugador(), r.getAlmacenJugador(), r.getAlmacenComputador());
+            String nameJ1 = (r.getNombreJugador() != null && !r.getNombreJugador().trim().isEmpty())
+                    ? r.getNombreJugador()
+                    : getString(R.string.txtPlayer1);
+            int scoreJ1 = r.getAlmacenJugador();
+            int scoreJ2 = r.getAlmacenComputador();
+
+            String htmlText;
+            if (scoreJ1 > scoreJ2) {
+                htmlText = String.format(Locale.getDefault(),
+                        "%d. 🏆 <b><font color='#1B5E20'>%s (%d)</font></b> - %s (%d) | ⏱ %s (%s)",
+                        i + 1, nameJ1, scoreJ1, nombreJ2, scoreJ2, duracion, r.getFechaHora());
+            } else if (scoreJ2 > scoreJ1) {
+                htmlText = String.format(Locale.getDefault(),
+                        "%d. %s (%d) - 🏆 <b><font color='#1B5E20'>%s (%d)</font></b> | ⏱ %s (%s)",
+                        i + 1, nameJ1, scoreJ1, nombreJ2, scoreJ2, duracion, r.getFechaHora());
+            } else {
+                htmlText = String.format(Locale.getDefault(),
+                        "%d. 🤝 %s (%d) = %s (%d) [Empate] | ⏱ %s (%s)",
+                        i + 1, nameJ1, scoreJ1, nombreJ2, scoreJ2, duracion, r.getFechaHora());
+            }
+
+            items[i] = android.text.Html.fromHtml(htmlText, android.text.Html.FROM_HTML_MODE_LEGACY);
         }
 
         new AlertDialog.Builder(this)
