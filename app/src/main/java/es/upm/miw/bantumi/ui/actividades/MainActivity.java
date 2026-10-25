@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private String lastNombreJugador = "";
     private boolean esOrdenAscendente = false;
     private String jugadorFiltro = null;
+    private int ultimaCasillaResaltada = -1;
 
     private void iniciarCronometro() {
         if (!partidaIniciada) {
@@ -61,6 +62,27 @@ public class MainActivity extends AppCompatActivity {
             if (cronometro != null) {
                 cronometro.setBase(SystemClock.elapsedRealtime());
                 cronometro.start();
+            }
+        }
+    }
+
+    private void resaltarCasilla(int pos) {
+        ultimaCasillaResaltada = pos;
+        String num2digitos = String.format(Locale.getDefault(), "%02d", pos);
+        int idBoton = getResources().getIdentifier("casilla_" + num2digitos, "id", getPackageName());
+        if (0 != idBoton) {
+            View viewHueco = findViewById(idBoton);
+            if (viewHueco != null) {
+                android.content.res.ColorStateList originalTint = viewHueco.getBackgroundTintList();
+                viewHueco.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getColor(android.R.color.holo_orange_light)));
+                new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                    if (viewHueco.getId() == idBoton) {
+                        viewHueco.setBackgroundTintList(originalTint);
+                        if (ultimaCasillaResaltada == pos) {
+                            ultimaCasillaResaltada = -1;
+                        }
+                    }
+                }, 1000); // 1 segundo exacto
             }
         }
     }
@@ -103,9 +125,11 @@ public class MainActivity extends AppCompatActivity {
         if (bantumiVM != null) {
             juegoBantumi = new JuegoBantumi(bantumiVM, turnoInicial, numInicialSemillas);
             juegoBantumi.inicializar(turnoInicial);
+            juegoBantumi.setJugadaListener(this::resaltarCasilla);
         }
 
         partidaIniciada = false;
+        ultimaCasillaResaltada = -1;
         if (cronometro != null) {
             cronometro.stop();
             cronometro.setBase(SystemClock.elapsedRealtime());
@@ -125,11 +149,58 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Instancia el ViewModel y el juego, y asigna observadores a los huecos
         cronometro = findViewById(R.id.cronometro);
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
-        iniciarNuevaPartida();
+
+        android.content.SharedPreferences preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        String numSemillasStr = preferences.getString("prefKeyNumInicialSemillas", String.valueOf(getResources().getInteger(R.integer.intNumInicialSemillas)));
+        try {
+            numInicialSemillas = Integer.parseInt(numSemillasStr);
+        } catch (Exception e) {
+            numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
+        }
+
+        String nombreJugador = preferences.getString("prefKeyNombreJugador", getString(R.string.txtPlayer1));
+        TextView tvPlayer1 = findViewById(R.id.tvPlayer1);
+        if (tvPlayer1 != null) {
+            tvPlayer1.setText(nombreJugador);
+        }
+
+        lastNumSemillas = numSemillasStr;
+        lastTurnoInicial = preferences.getString("prefKeyTurnoInicial", "turnoJ1");
+        lastNombreJugador = nombreJugador;
+
+        juegoBantumi = new JuegoBantumi(bantumiVM, bantumiVM.getTurno().getValue() != null ? bantumiVM.getTurno().getValue() : JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
+        juegoBantumi.setJugadaListener(this::resaltarCasilla);
+
+        if (savedInstanceState != null) {
+            partidaIniciada = savedInstanceState.getBoolean("partidaIniciada", false);
+            long base = savedInstanceState.getLong("cronometroBase", 0);
+            if (partidaIniciada && cronometro != null && base != 0) {
+                cronometro.setBase(base);
+                cronometro.start();
+            } else if (cronometro != null) {
+                cronometro.setBase(SystemClock.elapsedRealtime());
+            }
+            ultimaCasillaResaltada = savedInstanceState.getInt("ultimaCasillaResaltada", -1);
+            if (ultimaCasillaResaltada >= 0) {
+                final int posToHighlight = ultimaCasillaResaltada;
+                getWindow().getDecorView().post(() -> resaltarCasilla(posToHighlight));
+            }
+        } else {
+            iniciarNuevaPartida();
+        }
         crearObservadores();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("partidaIniciada", partidaIniciada);
+        if (cronometro != null) {
+            outState.putLong("cronometroBase", cronometro.getBase());
+        }
+        outState.putInt("ultimaCasillaResaltada", ultimaCasillaResaltada);
     }
 
     @Override
