@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,16 +12,34 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Chronometer
-            android:id="@+id/cronometro"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
-            android:padding="8dp"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:paddingHorizontal="16dp">
+
+            <Chronometer
+                android:id="@+id/cronometro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="8dp"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/black" />
+
+            <ImageButton
+                android:id="@+id/btnSalir"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/txtOpcionSalir"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/black" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvPlayer2"

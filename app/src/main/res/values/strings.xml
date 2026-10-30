@@ -18,6 +18,11 @@
     <string name="txtOpcionGuardar">Guardar Partida</string>
     <string name="txtOpcionRecuperar">Recuperar Partida</string>
     <string name="txtOpcionMejoresResultados">Mejores Resultados</string>
+    <string name="txtOpcionSalir">Salir</string>
+    <string name="txtDialogoSalirTitulo">Salir de la aplicación</string>
+    <string name="txtDialogoSalirPregunta">¿Desea salir de Bantumi?</string>
+    <string name="txtPartidaIniciada">Partida iniciada</string>
+    <string name="txtAjustesGuardados">Ajuste guardado correctamente</string>
     <string name="txtPartidaGuardada">Partida guardada correctamente</string>
     <string name="txtSinPartidaGuardada">No hay ninguna partida guardada</string>
     <string name="txtPartidaRecuperada">Partida recuperada correctamente</string>

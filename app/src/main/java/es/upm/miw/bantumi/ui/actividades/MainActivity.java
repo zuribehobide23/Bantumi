@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -140,6 +141,10 @@ public class MainActivity extends AppCompatActivity {
             cronometro.setBase(SystemClock.elapsedRealtime());
         }
         puntuacionGuardada = false;
+
+        if (findViewById(android.R.id.content) != null) {
+            Snackbar.make(findViewById(android.R.id.content), R.string.txtPartidaIniciada, Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -172,6 +177,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         cronometro = findViewById(R.id.cronometro);
+        ImageButton btnSalir = findViewById(R.id.btnSalir);
+        if (btnSalir != null) {
+            btnSalir.setOnClickListener(v -> mostrarDialogoSalir());
+            androidx.appcompat.widget.TooltipCompat.setTooltipText(btnSalir, getString(R.string.txtOpcionSalir));
+        }
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
 
         String numSemillasStr = preferences.getString("prefKeyNumInicialSemillas", String.valueOf(getResources().getInteger(R.integer.intNumInicialSemillas)));
@@ -378,6 +388,12 @@ public class MainActivity extends AppCompatActivity {
         lastColorNombre = cNombre;
         lastColorIconos = prefs.getString("prefKeyColorIconos", "azul");
         lastColorTurnoFondo = cTurnoFondo;
+
+        int colorIcono = obtenerColor(lastColorIconos, getColor(android.R.color.holo_blue_dark));
+        ImageButton btnSalir = findViewById(R.id.btnSalir);
+        if (btnSalir != null) {
+            btnSalir.setImageTintList(android.content.res.ColorStateList.valueOf(colorIcono));
+        }
     }
 
     private void mostrarValor(int pos, int valor) {
@@ -430,6 +446,15 @@ public class MainActivity extends AppCompatActivity {
             ).show();
         }
         return true;
+    }
+
+    private void mostrarDialogoSalir() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.txtDialogoSalirTitulo)
+                .setMessage(R.string.txtDialogoSalirPregunta)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> finish())
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     public void mostrarMejoresResultados() {
