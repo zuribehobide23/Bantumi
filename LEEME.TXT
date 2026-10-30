@@ -17,3 +17,4 @@ Esta aplicación es una implementación del juego de mesa Bantumi para un jugado
 - Añadir opciones para cambiar los colores de la aplicación, así como el fondo, las semillas, los iconos, etc.
 - Permitir cambiar el idioma de la aplicación (Español, Inglés o Euskera).
 - Añadir flecha de retroceso para salir de las preferencias.
+- Añadir opción y diálogo de confirmación para salir de la aplicación.

@@ -116,6 +116,14 @@ public class SettingsActivity extends AppCompatActivity {
                         pTurno.setEntries(new CharSequence[]{nombreJ1, nombreJ2, aleatorio});
                     }
                 }
+
+                if (getView() != null) {
+                    com.google.android.material.snackbar.Snackbar.make(
+                            getView(),
+                            R.string.txtAjustesGuardados,
+                            com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+                    ).show();
+                }
             };
         }
 

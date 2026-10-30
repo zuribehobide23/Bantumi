@@ -6,10 +6,15 @@
     <string name="txtBtnIniciar">Start</string>
     <string name="txtInitialScore">0</string>
     <string name="txtSinImplementar">Not implemented yet!</string>
+    <string name="txtPartidaIniciada">Game started</string>
+    <string name="txtAjustesGuardados">Settings saved successfully</string>
     <string name="txtReiniciarPartida">Restart</string>
     <string name="txtOpcionGuardar">Save Game</string>
     <string name="txtOpcionRecuperar">Recover Game</string>
     <string name="txtOpcionMejoresResultados">Best Results</string>
+    <string name="txtOpcionSalir">Exit</string>
+    <string name="txtDialogoSalirTitulo">Exit Application</string>
+    <string name="txtDialogoSalirPregunta">Do you want to exit Bantumi?</string>
     <string name="aboutMessage"><p>Each player chooses one of their 6 pits—which cannot be empty—collects all the seeds it contains, and “sows” them one by one in a counter-clockwise direction into the subsequent pits on the board (excluding the opponent’s store). The following rules apply:</p>         <ul>             <li>If the last seed is sown into one’s own store, the player gets another turn.</li>             <li>If the last seed is sown into one of one’s own pits that was previously empty, that last seed—along with any seeds in the opponent’s corresponding pit—is moved into one’s own store.</li>             <li>The game ends the moment one of the players has all of their pits empty. If the opponent still has seeds, these are moved to the store belonging to the owner of those pits.</li>         </ul>         <p>The player who collects the greatest number of seeds in their store wins.</p></string>
     <string name="preferencesText">Settings</string>
     <string name="txtPartidaGuardada">Game saved successfully</string>
